@@ -1,20 +1,32 @@
 <?php header('Refresh: 60');
-  // Connection info
-require_once('../roach/inc/connect.php');
+// Connection info
 // Start the session
 session_start();
 
-// Connect to DB
-mysql_connect($server,$username,$password);
-mysql_query("set character_set_connection=utf8,character_set_database=utf8");
-mysql_select_db($database) or die( "Unable to select database");
+$servername = "localhost";
+$username = "fabian";
+$password = "***REMOVED***";
+$database = "meerkat";
 
-// Header 
+// Connect to DB
+mysql_connect($server, $username, $password) or die("Failed to connect to database: " . mysql_error());
+#mysql_query("set character_set_connection=utf8,character_set_database=utf8");
+mysql_select_db($database) or die("Unable to select database: " . mysql_error());
+
+// Header
 echo "<html>\n<head>\n";
-echo "<title>Jodrell Bank Observatory: DFB Data Archive | Jodrell Bank Centre for Astrophysics</title>\n";
+echo "<title>MeerTRAP Candidate Viewer</title>\n";
 echo "<meta http-equiv='Content-Type' content='text/html; charset=ISO-8859-1' />\n";
-echo "<meta name='author' content='Cees Bassa, Ben Stappers, Christine Jordan' />\n";
-echo "\n</head>\n<body bgcolor='#BBBBBB'>\n";
+echo "<meta name='author' content='Fabian Jankowski' />\n";
+echo "</head>\n";
+echo "<body>\n";
+echo "<h1>MeerTRAP Candidate Viewer</h1>\n";
+
+// get candidates
+$result = mysql_query("select * from candidates");
+    while ($cand = mysql_fetch_array($result)) {
+        echo "<p>Candidate: " . $cand['id'] . ", " . $cand['dm'] . ", " . $cand['dm_ex'] . ", " . $cand['snr'] . ", " . $cand['width'] . ", " . $cand['ra'] . ", " . $cand['dec'] . "</p>\n";
+    }
 
 // Get observation number
 $i = (isset($_GET['i']) ? $_GET['i'] : null);
@@ -72,9 +84,6 @@ sort($files);
 $j = $n-$i-1;
 
 echo "<div align='center'>\n";
-
-// Instruments
-echo "<p>[ dfb | <a href='http://www.epta.eu.org/roach'>roach</a> | <a href='http://www.epta.eu.org/cobra2'>cobra2</a> | <a href='http://www.epta.eu.org/transient'>transient</a> ]</p>\n";
 
 // Buttons
 echo "<table>\n<tr>\n<th>\n";
