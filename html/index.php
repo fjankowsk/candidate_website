@@ -1,207 +1,114 @@
 <?php header('Refresh: 60');
-// Connection info
-// Start the session
+
+// connect to database
+require_once('dbconnection.php');
+
+// start the session
 session_start();
 
-$servername = "localhost";
-$username = "fabian";
-$password = "***REMOVED***";
-$database = "meerkat";
+// header
+$header = <<<HEADER
+<html>
+<head>
+  <title>MeerTRAP Candidate Viewer</title>
+  <meta http-equiv='Content-Type' content='text/html; charset=UTF-8' />
+  <meta name='author' content='Fabian Jankowski' />
+</head>
+<body>
+  <div align='center'>
+  <h1>MeerTRAP Candidate Viewer</h1>
 
-// Connect to DB
-mysql_connect($server, $username, $password) or die("Failed to connect to database: " . mysql_error());
-#mysql_query("set character_set_connection=utf8,character_set_database=utf8");
-mysql_select_db($database) or die("Unable to select database: " . mysql_error());
+HEADER;
+echo $header;
 
-// Header
-echo "<html>\n<head>\n";
-echo "<title>MeerTRAP Candidate Viewer</title>\n";
-echo "<meta http-equiv='Content-Type' content='text/html; charset=ISO-8859-1' />\n";
-echo "<meta name='author' content='Fabian Jankowski' />\n";
-echo "</head>\n";
-echo "<body>\n";
-echo "<h1>MeerTRAP Candidate Viewer</h1>\n";
+// selection form
+$select_form = <<<FORM
+<form action='index.php'>
+  <label for='pointing'>Pointing</label>
+  <input type='text' name='pointing' id='pointing' />
+  <label for='psr'>Beam</label>
+  <input type='text' name='beam' id='beam' />
+  <input type='submit' value='Submit' />
+</form>
+FORM;
+echo $select_form;
+
+// sort form
+$sort_form = <<<FORM
+<form action='index.php'>
+  <p>Sort by:
+    <select name='sort'>
+      <option value='snr'>S/N</option>
+      <option value='dm'>DM</option>
+      <option value='width'>Width</option>
+    </select>
+    <input type='submit' value='Submit' />
+  </p>
+</form>
+FORM;
+echo $sort_form;
+
+// figure out sorting
+$raw_sort = isset($_GET['sort']) ? $_GET['sort'] : null;
+
+switch ($raw_sort):
+    case 'snr':
+        $sort = 'snr';
+        break;
+    case 'dm':
+        $sort = 'dm';
+        break;
+    case 'width':
+        $sort = 'width';
+        break;
+    default:
+        $sort = "id";
+endswitch;
+
+// // 1) prepare statement
+// $stmt = $conn->prepare("SELECT * FROM candidates ORDER BY ?");
+
+// // 2) bind parameters
+// $stmt->bind_param("s", $sort);
+
+// // 3) execute
+// $stmt->execute();
+// print("Test");
+
+// // 4) fetch results
+// $result = $stmt->get_result();
 
 // get candidates
-$result = mysql_query("select * from candidates");
-    while ($cand = mysql_fetch_array($result)) {
-        echo "<p>Candidate: " . $cand['id'] . ", " . $cand['dm'] . ", " . $cand['dm_ex'] . ", " . $cand['snr'] . ", " . $cand['width'] . ", " . $cand['ra'] . ", " . $cand['dec'] . "</p>\n";
-    }
+$result = $conn->query("SELECT * FROM candidates ORDER BY " . $sort);
 
-// Get observation number
-$i = (isset($_GET['i']) ? $_GET['i'] : null);
-// Get pulsar
-$psr = (isset($_GET['psr']) ? $_GET['psr'] : null);
-// Get number of plots to display
-$num = (isset($_GET['n']) ? $_GET['n'] : null);
-// Get size
-$size = (isset($_GET['s']) ? $_GET['s'] : null);
-
-// Error checking
-if ($i==NULL)
-  $i = 0;
-if ($num==NULL)
-  $num = 1;
-if ($size==NULL)
-  $size = 0;
-
-// Read directory contents
-$dir = ".";
-$odir = opendir($dir);
-$n = 0;
-$files = array();
-while($file = readdir($odir)) {
-  if ($size == 0) {
-    if (substr($file,-8) == "_sft.png") {
-      $fileroot = substr($file,0,-8);
-      if ($psr!=NULL) {
-	if (strstr($fileroot,$psr)) {
-	  $n++;
-	  $files[$n]=$fileroot;
-	}
-      } else {
-	$n++;
-	$files[$n]=$fileroot;
-      }
-    }
-  } else {
-    if (substr($file,-10) == "_sft_s.png") {
-      $fileroot = substr($file,0,-10);
-      if ($psr!=NULL) {
-	if (strstr($fileroot,$psr)) {
-	  $n++;
-	  $files[$n]=$fileroot;
-	}
-      } else {
-	$n++;
-	$files[$n]=$fileroot;
-      }
-    }
-  }
+while ($cand = $result->fetch_assoc()) {
+    echo "<p>Candidate: " . $cand['id'] . ", " . $cand['dm'] . ", " . $cand['dm_ex'] . ", " .
+    $cand['snr'] . ", " . $cand['width'] . ", " . $cand['ra'] . ", " . $cand['dec'] . "</p>\n";
 }
-sort($files);
 
-$j = $n-$i-1;
-
-echo "<div align='center'>\n";
-
-// Buttons
+// navigation
 echo "<table>\n<tr>\n<th>\n";
-if ($psr!=NULL && $num>1) {
-  echo "<a href='index.php?i=" . ($n-$num) . "&psr=" . urlencode($psr) . "&n=" . $num . "&s=" . $size . "'><img src='images/skip-backward-icon.png' border='0'></a>\n";
-  echo "</th><th>\n";
-  echo "<a href='index.php?i=" . ($i+5*$num) . "&psr=" . urlencode($psr) . "&n=" . $num . "&s=" . $size . "'><img src='images/fast-backward-icon.png' border='0'></a>\n";
-  echo "</th><th>\n";
-  echo "<a href='index.php?i=" . ($i+$num) . "&psr=" . urlencode($psr) . "&n=" . $num . "&s=" . $size . "'><img src='images/backward-icon.png' border='0'></a>\n";
-  echo "</th><th>\n";
-  echo "<a href='index.php?i=" . ($i-$num) . "&psr=" . urlencode($psr) . "&n=" . $num . "&s=" . $size . "'><img src='images/forward-icon.png' border='0'></a>\n";
-  echo "</th><th>\n";
-  echo "<a href='index.php?i=" . ($i-5*$num) . "&psr=" . urlencode($psr) . "&n=" . $num . "&s=" . $size . "'><img src='images/fast-forward-icon.png' border='0'></a>\n";
-  echo "</th><th>\n";
- } else if ($psr!=NULL && $num==1) {
-  echo "<a href='index.php?i=" . ($n-$num) . "&psr=" . urlencode($psr) . "&s=" . $size . "'><img src='images/skip-backward-icon.png' border='0'></a>\n";
-  echo "</th><th>\n";
-  echo "<a href='index.php?i=" . ($i+5*$num) . "&psr=" . urlencode($psr) . "&s=" . $size . "'><img src='images/fast-backward-icon.png' border='0'></a>\n";
-  echo "</th><th>\n";
-  echo "<a href='index.php?i=" . ($i+$num) . "&psr=" . urlencode($psr) . "&s=" . $size . "'><img src='images/backward-icon.png' border='0'></a>\n";
-  echo "</th><th>\n";
-  echo "<a href='index.php?i=" . ($i-$num) . "&psr=" . urlencode($psr) . "&s=" . $size . "'><img src='images/forward-icon.png' border='0'></a>\n";
-  echo "</th><th>\n";
-  echo "<a href='index.php?i=" . ($i-5*$num) . "&psr=" . urlencode($psr) . "&s=" . $size . "'><img src='images/fast-forward-icon.png' border='0'></a>\n";
-  echo "</th><th>\n";
-} else {
-  echo "<a href='index.php?i=" . ($n-$num) . "&n=" . $num . "&s=" . $size . "'><img src='images/skip-backward-icon.png' border='0'></a>\n";
-  echo "</th><th>\n";
-  echo "<a href='index.php?i=" . ($i+5*$num) . "&n=" . $num . "&s=" . $size . "'><img src='images/fast-backward-icon.png' border='0'></a>\n";
-  echo "</th><th>\n";
-  echo "<a href='index.php?i=" . ($i+$num) . "&n=" . $num . "&s=" . $size . "'><img src='images/backward-icon.png' border='0'></a>\n";
-  echo "</th><th>\n";
-  echo "<a href='index.php?i=" . ($i-$num) . "&n=" . $num . "&s=" . $size . "'><img src='images/forward-icon.png' border='0'></a>\n";
-  echo "</th><th>\n";
-  echo "<a href='index.php?i=" . ($i-5*$num) . "&n=" . $num . "&s=" . $size . "'><img src='images/fast-forward-icon.png' border='0'></a>\n";
-  echo "</th><th>\n";
- }
+echo "<a href='index.php?i=" . ($n-$num) . "&n=" . $num . "&s=" . $size . "'><img src='images/skip-backward-icon.png' border='0'></a>\n";
+echo "</th><th>\n";
+echo "<a href='index.php?i=" . ($i+5*$num) . "&n=" . $num . "&s=" . $size . "'><img src='images/fast-backward-icon.png' border='0'></a>\n";
+echo "</th><th>\n";
+echo "<a href='index.php?i=" . ($i+$num) . "&n=" . $num . "&s=" . $size . "'><img src='images/backward-icon.png' border='0'></a>\n";
+echo "</th><th>\n";
+echo "<a href='index.php?i=" . ($i-$num) . "&n=" . $num . "&s=" . $size . "'><img src='images/forward-icon.png' border='0'></a>\n";
+echo "</th><th>\n";
+echo "<a href='index.php?i=" . ($i-5*$num) . "&n=" . $num . "&s=" . $size . "'><img src='images/fast-forward-icon.png' border='0'></a>\n";
+echo "</th><th>\n";
 echo "<a href='index.php'><img src='images/skip-forward-icon.png' border='0'></a>\n";
 echo "</th>\n</tr></table>\n";
 
-// Form
-echo "<p><form action='index.php' method='get'>";
-echo "<input type='text' name='psr' />";
-echo "<input type='submit' />";
-echo "</form></p>\n";
+$footer = <<<FOOTER
+  </div>
+</body>
+</html>
+FOOTER;
 
-// Selection
-if ($psr) {
-  echo "[ <a href='http://www.epta.eu.org/dfb/index.php?i=" . $i . "&psr=" . urlencode($psr) . "&n=1&s=" . $size . "'>1</a> | \n";
-  echo "<a href='http://www.epta.eu.org/dfb/index.php?i=" . $i . "&psr=" . urlencode($psr) . "&n=5&s=" . $size . "'>5</a> | \n";
-  echo "<a href='http://www.epta.eu.org/dfb/index.php?i=" . $i . "&psr=" . urlencode($psr) . "&n=10&s=" . $size . "'>10</a> | \n";
-  echo "<a href='http://www.epta.eu.org/dfb/index.php?i=" . $i . "&psr=" . urlencode($psr) . "&n=25&s=" . $size . "'>25</a> | \n";
-  echo "<a href='http://www.epta.eu.org/dfb/index.php?i=" . $i . "&psr=" . urlencode($psr) . "&n=50&s=" . $size . "'>50</a> | \n";
-  echo "<a href='http://www.epta.eu.org/dfb/index.php?i=" . $i . "&psr=" . urlencode($psr) . "&n=" . $num . "&s=0'>L</a> | \n";
-  echo "<a href='http://www.epta.eu.org/dfb/index.php?i=" . $i . "&psr=" . urlencode($psr) . "&n=" . $num . "&s=1'>S</a> ]\n";
- } else {
-  echo "[ <a href='http://www.epta.eu.org/dfb/index.php?i=" . $i . "&n=1&s=" . $size . "'>1</a> | \n";
-  echo "<a href='http://www.epta.eu.org/dfb/index.php?i=" . $i . "&n=5&s=" . $size . "'>5</a> | \n";
-  echo "<a href='http://www.epta.eu.org/dfb/index.php?i=" . $i . "&n=10&s=" . $size . "'>10</a> | \n";
-  echo "<a href='http://www.epta.eu.org/dfb/index.php?i=" . $i . "&n=25&s=" . $size . "'>25</a> | \n";
-  echo "<a href='http://www.epta.eu.org/dfb/index.php?i=" . $i . "&n=50&s=" . $size . "'>50</a> | \n";
-  echo "<a href='http://www.epta.eu.org/dfb/index.php?i=" . $i . "&n=" . $num . "&s=0'>L</a> | \n";
-  echo "<a href='http://www.epta.eu.org/dfb/index.php?i=" . $i . "&n=" . $num . "&s=1'>S</a> ]\n";
- }
+echo $footer;
 
-// Keep index in range
-if ($j<0)
-  $j=0;
-if ($j>$n-1)
-  $j=$n-1;
-
-// Loop over plots
-for ($k=$j,$flag=0;$k>$j-$num;$k--) {
-  list($date, $time, $name) = explode("_", $files[$k]);
-
-  // Exit if out of array
-  if (!$files[$k])
-    break;
-
-  // Plot information
-  //  if ($flag==0) {
-    $result=mysql_query("select * from pulsars where name like '" . $name . "'");
-    while ($row=mysql_fetch_array($result)) {
-      echo "<p>" . $files[$k] . "; <b>Pulsar:</b> " . $row['name'] . "; <b>Period:</b> " . $row['period'] . " s; <b>DM:</b> " . $row['dm'] . " pc cm<sup>-3</sup>";
-      if ($row['is_binary']==1) {
-	echo "; <b>Comments:</b> binary";
-	if ($row['notes']!="")
-	  echo ", ". $row['notes'];
-      } else {
-	if ($row['notes']!="")
-	  echo "; <b>Comments:</b> ". $row['notes'];
-      }
-    }
-    echo "</p>";
-    //  }
-  if ($psr)
-    $flag=1;
-
-  // Plots
-  if ($size==0) {
-    echo "<p><table cellpadding='0' cellspacing='0'>\n<tr>\n";
-    echo "<td><a href='" . $files[$k] . "_sft.png'><img src=" . $files[$k] . "_sft.png width='425' height='340' border='0'></td>\n";
-    echo "<td><a href='" . $files[$k] . "_gtp.png'><img src=" . $files[$k] . "_gtp.png width='425' height='340' border='0'></td>\n";
-    echo "<td><a href='" . $files[$k] . "_yfp.png'><img src=" . $files[$k] . "_yfp.png width='425' height='340' border='0'></td>\n";
-    echo "</tr>\n</table>\n";
-  } else {
-    echo "<p><table cellpadding='0' cellspacing='0'>\n<tr>\n";
-    echo "<td><a href='" . $files[$k] . "_sft_s.png'><img src=" . $files[$k] . "_sft_s.png width='425' height='340' border='0'></td>\n";
-    echo "<td><a href='" . $files[$k] . "_gtp_s.png'><img src=" . $files[$k] . "_gtp_s.png width='425' height='340' border='0'></td>\n";
-    echo "<td><a href='" . $files[$k] . "_yfp_s.png'><img src=" . $files[$k] . "_yfp_s.png width='425' height='340' border='0'></td>\n";
-    echo "</tr>\n</table>\n";
-  }
-  // Link
-  echo "<a href='plot.php?fileroot=" . urlencode($files[$k]) . "'>Link to observation</a></p>\n";
- }
-
-echo "</div></body>\n</html>\n";
-
-mysql_close();
+$conn->close;
 
 ?>
