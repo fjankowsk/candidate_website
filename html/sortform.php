@@ -16,6 +16,9 @@ if ( !filter_var($raw_sort, FILTER_SANITIZE_STRING) === false ) {
 }
 
 switch ($raw_sort):
+  case 'utc':
+    $sort = 'utc';
+    break;
   case 'snr':
     $sort = 'snr';
     break;
@@ -34,6 +37,7 @@ $_SESSION['sort'] = $sort;
 
 // sort form
 $sort_options = array(
+  "utc" => "UTC",
   "snr" => "S/N",
   "dm" => "DM",
   "width" => "Width",
