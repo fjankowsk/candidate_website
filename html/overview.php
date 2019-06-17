@@ -16,11 +16,54 @@ include 'selectform.php';
 include 'sortform.php';
 
 // get candidates
-$result = $conn->query("SELECT * FROM candidates ORDER BY " . $sort . " LIMIT 100");
+$result = $conn->query("SELECT * FROM candidates WHERE pointing = " . $pointing .
+" ORDER BY " . $sort . " LIMIT 100");
 
-while ($cand = $result->fetch_assoc()) {
-    echo "<p>Candidate: " . $cand['id'] . ", " . $cand['dm'] . ", " . $cand['dm_ex'] . ", " .
-    $cand['snr'] . ", " . $cand['width'] . ", " . $cand['ra'] . ", " . $cand['dec'] . "</p>\n";
+if ( $result->num_rows == 0 ) {
+    echo "<p>No candidates match selection.</p>";
+
+} else {
+    echo "<p>" . $result->num_rows . " candidates match selection.</p>\n";
+
+    echo "<table>\n
+    <tr>\n
+    <th>ID</th>\n
+    <th>UTC</th>\n
+    <th>S/N</th>\n
+    <th>DM</th>\n
+    <th>Width</th>\n
+    <th>Pointing</th>\n
+    <th>Beam</th>\n
+    <th>RA</th>\n
+    <th>Dec</th>\n
+    </tr>\n";
+
+    echo "<tr>\n
+    <td></td>\n
+    <td></td>\n
+    <td></td>\n
+    <td>(pc cm<sup>-3</sup>)</td>\n
+    <td>(ms)</td>\n
+    <td></td>\n
+    <td></td>\n
+    <td>(hh:mm:ss)</td>\n
+    <td>(dd:mm:ss)</td>\n
+    </tr>\n";
+
+    while ($cand = $result->fetch_assoc()) {
+        echo "<tr>\n";
+        echo "<td><a href='index.php?id=" . $cand['id'] . "'>" . $cand['id'] . "</a></td>\n";
+        echo "<td>" . $cand['utc'] . "</td>\n";
+        echo "<td>" . $cand['snr'] . "</td>\n";
+        echo "<td>" . $cand['dm'] . "</td>\n";
+        echo "<td>" . $cand['width'] . "</td>\n";
+        echo "<td>" . $cand['pointing'] . "</td>\n";
+        echo "<td>" . $cand['beam'] . "</td>\n";
+        echo "<td>" . $cand['ra'] . "</td>\n";
+        echo "<td>" . $cand['dec'] . "</td>\n";
+        echo "</tr>\n";
+    }
+    echo "</table>\n";
 }
 
 // footer
