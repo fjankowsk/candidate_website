@@ -8,3 +8,9 @@
 <body>
   <div align='center'>
   <h1>MeerTRAP Candidate Viewer</h1>
+  <p>
+    [
+    <a href='index.php'>Candidate View</a> |
+    <a href='overview.php'>Overview</a>
+    ]
+  </p>
