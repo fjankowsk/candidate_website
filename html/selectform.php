@@ -6,10 +6,12 @@ if ( isset($_GET['pointing']) ) {
 } elseif ( isset($_SESSION['pointing']) ) {
   $raw_pointing = $_SESSION['pointing'];
 } else {
-  $raw_pointing = 1;
+  $raw_pointing = null;
 }
 
-if ( !filter_var($raw_pointing, FILTER_VALIDATE_INT) === false ) {
+if ( $raw_pointing == null ) {
+    $pointing = null;
+} elseif ( !filter_var($raw_pointing, FILTER_VALIDATE_INT) === false ) {
     $pointing = filter_var($raw_pointing, FILTER_SANITIZE_NUMBER_INT);
 } else {
     die("Pointing is invalid.");
