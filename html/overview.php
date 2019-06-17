@@ -17,7 +17,7 @@ include 'sortform.php';
 
 // get candidates
 $result = $conn->query("SELECT * FROM candidates WHERE pointing = " . $pointing .
-" ORDER BY " . $sort . " LIMIT 100");
+" ORDER BY " . $sort . " DESC LIMIT 100");
 
 if ( $result->num_rows == 0 ) {
     echo "<p>No candidates match selection.</p>";
