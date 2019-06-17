@@ -15,12 +15,30 @@ include 'selectform.php';
 // sort form
 include 'sortform.php';
 
+// get offset
+if ( isset($_GET['offset']) ) {
+    $raw_offset = $_GET['offset'];
+} else {
+    $raw_offset = 0;
+}
+  
+if ( filter_var($raw_offset, FILTER_VALIDATE_INT) === 0 || filter_var($raw_offset, FILTER_VALIDATE_INT) ) {
+    $offset = filter_var($raw_offset, FILTER_SANITIZE_NUMBER_INT);
+} else {
+    die("Offset is invalid.");
+}
+
+// treat negative case
+if ( $offset < 0 ) {
+    $offset = 0;
+}
+
 // get candidates
 if ( $pointing === null ) {
-    $result = $conn->query("SELECT * FROM candidates ORDER BY " . $sort . " DESC LIMIT 100");
+    $result = $conn->query("SELECT * FROM candidates ORDER BY " . $sort . " DESC LIMIT 100 OFFSET " . $offset);
 } else {
     $result = $conn->query("SELECT * FROM candidates WHERE pointing = " . $pointing .
-    " ORDER BY " . $sort . " DESC LIMIT 100");
+    " ORDER BY " . $sort . " DESC LIMIT 100 OFFSET " . $offset);
 }
 
 if ( $result->num_rows == 0 ) {
@@ -28,6 +46,20 @@ if ( $result->num_rows == 0 ) {
 
 } else {
     echo "<p>" . $result->num_rows . " candidates match selection.</p>\n";
+
+    if ( $result->num_rows >= 100 ) {
+        // display navigation
+        echo "<table>\n
+        <tr>\n";
+
+        echo "<th><a href='?offset=" . ($offset - 100) . "'>
+        <img src='images/backward-icon.png' border='0'></a></th>\n";
+        echo "<th><a href='?offset=" . ($offset + 100) . "'>
+        <img src='images/forward-icon.png' border='0'></a></th>\n";
+
+        echo "</tr>\n
+        </table>\n";
+    }
 
     echo "<table>\n
     <tr>\n
