@@ -90,7 +90,7 @@ if ( $result->num_rows == 0 ) {
 
     while ($cand = $result->fetch_assoc()) {
         echo "<tr>\n";
-        echo "<td><a href='index.php?id=" . $cand['id'] . "'>" . $cand['id'] . "</a></td>\n";
+        echo "<td><a href='detailview.php?id=" . $cand['id'] . "'>" . $cand['id'] . "</a></td>\n";
         echo "<td>" . $cand['utc'] . "</td>\n";
         echo "<td>" . $cand['snr'] . "</td>\n";
         echo "<td>" . $cand['dm'] . "</td>\n";

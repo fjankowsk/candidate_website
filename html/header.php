@@ -11,6 +11,7 @@
   <p>
     [
     <a href='index.php'>Candidate View</a> |
-    <a href='overview.php'>Overview</a>
+    <a href='overview.php'>Overview</a> |
+    <a href='detailview.php'>Detail View</a>
     ]
   </p>
