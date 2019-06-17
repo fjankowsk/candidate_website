@@ -1,4 +1,4 @@
-<?php header('Refresh: 60');
+<?php
 
 // connect to database
 require_once('dbconnection.php');
@@ -81,6 +81,6 @@ FOOTER;
 
 echo $footer;
 
-$conn->close;
+$conn->close();
 
 ?>
