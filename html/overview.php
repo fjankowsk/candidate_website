@@ -7,19 +7,7 @@ require_once('dbconnection.php');
 session_start();
 
 // header
-$header = <<<HEADER
-<html>
-<head>
-  <title>MeerTRAP Candidate Viewer</title>
-  <meta http-equiv='Content-Type' content='text/html; charset=UTF-8' />
-  <meta name='author' content='Fabian Jankowski' />
-</head>
-<body>
-  <div align='center'>
-  <h1>MeerTRAP Candidate Viewer</h1>
-
-HEADER;
-echo $header;
+include 'header.php';
 
 // selection form
 $select_form = <<<FORM
@@ -73,14 +61,7 @@ while ($cand = $result->fetch_assoc()) {
     $cand['snr'] . ", " . $cand['width'] . ", " . $cand['ra'] . ", " . $cand['dec'] . "</p>\n";
 }
 
-$footer = <<<FOOTER
-  </div>
-</body>
-</html>
-FOOTER;
-
-echo $footer;
-
-$conn->close();
+// footer
+include 'footer.php';
 
 ?>
