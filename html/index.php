@@ -1,17 +1,17 @@
 <?php
 
-// connect to database
-require_once('dbconnection.php');
-
 // start the session
 session_start();
+
+// connect to database
+require_once('dbconnection.php');
 
 // header
 include 'header.php';
 
 // selection form
 $select_form = <<<FORM
-<form action='index.php'>
+<form action='index.php' method='get'>
   <label for='pointing'>Pointing</label>
   <input type='text' name='pointing' id='pointing' />
   <label for='psr'>Beam</label>
@@ -24,7 +24,7 @@ echo $select_form;
 
 // sort form
 $sort_form = <<<FORM
-<form action='index.php'>
+<form action='index.php' method='get'>
   <p>Sort by:
     <select name='sort'>
       <option value='snr'>S/N</option>
@@ -38,8 +38,29 @@ $sort_form = <<<FORM
 FORM;
 echo $sort_form;
 
+// figure out pointing and beams
+$raw_pointing = null;
+
+if ( isset($_GET['pointing']) ) {
+    $raw_pointing = $_GET['pointing'];
+} elseif ( isset($_SESSION['pointing']) ) {
+    $raw_pointing = $_SESSION['pointing'];
+}
+
 // figure out sorting
-$raw_sort = isset($_GET['sort']) ? $_GET['sort'] : null;
+if ( isset($_GET['sort']) ) {
+    $raw_sort = $_GET['sort'];
+} elseif ( isset($_SESSION['sort']) ) {
+    $raw_sort = $_SESSION['sort'];
+} else {
+    $raw_sort = 'id';
+}
+
+if ( !filter_var($raw_sort, FILTER_SANITIZE_STRING) === false ) {
+    $raw_sort = filter_var($raw_sort, FILTER_SANITIZE_STRING);
+} else {
+    die("Sort is invalid.");
+}
 
 switch ($raw_sort):
     case 'snr':
@@ -55,9 +76,18 @@ switch ($raw_sort):
         $sort = "id";
 endswitch;
 
+// save sorting in session cookie
+$_SESSION['sort'] = $sort;
+
 // figure out id
 $raw_id = isset($_GET['id']) ? $_GET['id'] : 1;
-$id = intval($raw_id);
+
+if ( !filter_var($raw_id, FILTER_VALIDATE_INT) === false ) {
+    $id = filter_var($raw_id, FILTER_SANITIZE_NUMBER_INT);
+} else {
+    die("Id is invalid.");
+}
+
 
 // navigation
 echo "<table>";
