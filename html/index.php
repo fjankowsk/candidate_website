@@ -16,13 +16,22 @@ include 'selectform.php';
 include 'sortform.php';
 
 // figure out id
-$raw_id = isset($_GET['id']) ? $_GET['id'] : 1;
-
+if ( isset($_GET['id']) ) {
+    $raw_id = $_GET['id'];
+} elseif ( isset($_SESSION['id']) ) {
+    $raw_id = $_SESSION['id'];
+} else {
+    $raw_id = 1;
+}
+  
 if ( !filter_var($raw_id, FILTER_VALIDATE_INT) === false ) {
     $id = filter_var($raw_id, FILTER_SANITIZE_NUMBER_INT);
 } else {
-    die("Id is invalid.");
+    die("ID is invalid.");
 }
+  
+// save id in session cookie
+$_SESSION['id'] = $id;
 
 // navigation
 echo "<table>";
