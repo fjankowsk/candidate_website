@@ -36,6 +36,7 @@ if ( $result->num_rows == 0 ) {
     <th>Beam</th>\n
     <th>RA</th>\n
     <th>Dec</th>\n
+    <th>Views</th>\n
     </tr>\n";
 
     echo "<tr>\n
@@ -48,6 +49,7 @@ if ( $result->num_rows == 0 ) {
     <td></td>\n
     <td>(hh:mm:ss)</td>\n
     <td>(dd:mm:ss)</td>\n
+    <td></td>\n
     </tr>\n";
 
     while ($cand = $result->fetch_assoc()) {
@@ -61,6 +63,7 @@ if ( $result->num_rows == 0 ) {
         echo "<td>" . $cand['beam'] . "</td>\n";
         echo "<td>" . $cand['ra'] . "</td>\n";
         echo "<td>" . $cand['dec'] . "</td>\n";
+        echo "<td>" . $cand['viewed'] . "</td>\n";
         echo "</tr>\n";
     }
     echo "</table>\n";
