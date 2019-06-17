@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <html>
 <head>
   <title>MeerTRAP Candidate Viewer</title>
