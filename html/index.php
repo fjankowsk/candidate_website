@@ -15,6 +15,9 @@ include 'selectform.php';
 // sort form
 include 'sortform.php';
 
+// helper functions
+include 'helpers.php';
+
 // get offset
 if ( isset($_GET['offset']) ) {
     $raw_offset = $_GET['offset'];
@@ -34,24 +37,23 @@ if ( $offset < 0 ) {
 }
 
 // navigation
+$limit = 6;
 echo "<table>\n
 <tr>\n";
 
-echo "<th><a href='?offset=" . ($offset - 6) . "'>
+echo "<th><a href='?offset=" . ($offset - $limit) . "'>
 <img src='images/backward-icon.png' border='0'></a></th>\n";
-echo "<th><a href='?offset=" . ($offset + 6) . "'>
+echo "<th><a href='?offset=" . ($offset + $limit) . "'>
 <img src='images/forward-icon.png' border='0'></a></th>\n";
 
 echo "</tr>\n
 </table>\n";
 
 // get candidates
-if ( $pointing === null ) {
-    $result = $conn->query("SELECT * FROM candidates ORDER BY " . $sort . " DESC LIMIT 6 OFFSET " . $offset);
-} else {
-    $result = $conn->query("SELECT * FROM candidates WHERE pointing = " . $pointing .
-    " ORDER BY " . $sort . " DESC LIMIT 6 OFFSET " . $offset);
-}
+$sql = get_sql_query($pointing, $beam_start, $beam_end, $sort, $limit, $offset);
+echo "<p>SQL query: " . $sql . "</p>\n";
+
+$result = $conn->query($sql);
 
 if ( $result->num_rows == 0 ) {
     echo "<p>No candidates match selection.</p>";
