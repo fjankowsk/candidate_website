@@ -51,7 +51,7 @@ echo "</tr>\n
 
 // get candidates
 $sql = get_sql_query($pointing, $beam_start, $beam_end, $sort, $limit, $offset);
-echo "<p>SQL query: " . $sql . "</p>\n";
+//echo "<p>SQL query: " . $sql . "</p>\n";
 
 $result = $conn->query($sql);
 
