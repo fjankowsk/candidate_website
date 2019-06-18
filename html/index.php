@@ -64,15 +64,14 @@ if ( $result->num_rows == 0 ) {
     while ($cand = $result->fetch_assoc()) {
         echo "<div class='container'>\n";
 
+        echo "<div class='text'>ID: " . $cand['id'] . " S/N: " . $cand['snr'] .
+        " DM: " . $cand['dm'] . "</div>\n";
+
         echo "<a href='detailview.php?id=" . $cand['id'] . "'>
         <img class='image' alt='" . $cand['id'] . "' src='data:image;base64," .
         base64_encode($cand['tf_plot']) .
         "'></a>\n";
 
-        //echo "<div class='overlay'>\n";
-        //echo "<div class='text'>ID: " . $cand['id'] . " S/N: " . $cand['snr'] .
-        //" DM: " . $cand['dm'] . " pc cm<sup>-3</sup></div>\n";
-        //echo "</div>\n";
         echo "</div>\n";
 
     }
