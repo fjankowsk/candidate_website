@@ -15,110 +15,72 @@ include 'selectform.php';
 // sort form
 include 'sortform.php';
 
-// figure out id
-if ( isset($_GET['id']) ) {
-    $raw_id = $_GET['id'];
-} elseif ( isset($_SESSION['id']) ) {
-    $raw_id = $_SESSION['id'];
+// get offset
+if ( isset($_GET['offset']) ) {
+    $raw_offset = $_GET['offset'];
 } else {
-    $raw_id = 1;
+    $raw_offset = 0;
 }
   
-if ( !filter_var($raw_id, FILTER_VALIDATE_INT) === false ) {
-    $id = filter_var($raw_id, FILTER_SANITIZE_NUMBER_INT);
+if ( filter_var($raw_offset, FILTER_VALIDATE_INT) === 0 || filter_var($raw_offset, FILTER_VALIDATE_INT) ) {
+    $offset = filter_var($raw_offset, FILTER_SANITIZE_NUMBER_INT);
 } else {
-    die("ID is invalid.");
+    die("Offset is invalid.");
 }
-  
-// save id in session cookie
-$_SESSION['id'] = $id;
+
+// treat negative case
+if ( $offset < 0 ) {
+    $offset = 0;
+}
 
 // navigation
-echo "<table>";
-echo "<tr>\n";
-echo "<th>\n";
-echo "<a href='index.php?id=" . 1 . "'><img src='images/skip-backward-icon.png' border='0'></a>\n";
-echo "</th><th>\n";
-echo "<a href='index.php?id=" . ($id-50) . "'><img src='images/fast-backward-icon.png' border='0'></a>\n";
-echo "</th><th>\n";
-echo "<a href='index.php?id=" . ($id-1) . "'><img src='images/backward-icon.png' border='0'></a>\n";
-echo "</th><th>\n";
-echo "<a href='index.php?id=" . ($id+1) . "'><img src='images/forward-icon.png' border='0'></a>\n";
-echo "</th><th>\n";
-echo "<a href='index.php?id=" . ($id+50) . "'><img src='images/fast-forward-icon.png' border='0'></a>\n";
-echo "</th><th>\n";
-echo "<a href='index.php'><img src='images/skip-forward-icon.png' border='0'></a>\n";
-echo "</th>\n";
-echo "</tr>\n";
-echo "</table>\n";
+echo "<table>\n
+<tr>\n";
+
+echo "<th><a href='?offset=" . ($offset - 6) . "'>
+<img src='images/backward-icon.png' border='0'></a></th>\n";
+echo "<th><a href='?offset=" . ($offset + 6) . "'>
+<img src='images/forward-icon.png' border='0'></a></th>\n";
+
+echo "</tr>\n
+</table>\n";
 
 // get candidates
-$result = $conn->query("SELECT * FROM candidates WHERE id = " . $id);
+if ( $pointing === null ) {
+    $result = $conn->query("SELECT * FROM candidates ORDER BY " . $sort . " DESC LIMIT 6 OFFSET " . $offset);
+} else {
+    $result = $conn->query("SELECT * FROM candidates WHERE pointing = " . $pointing .
+    " ORDER BY " . $sort . " DESC LIMIT 6 OFFSET " . $offset);
+}
 
 if ( $result->num_rows == 0 ) {
-    echo "<p>Candidate not found.</p>";
+    echo "<p>No candidates match selection.</p>";
 
 } else {
-    $cand = $result->fetch_assoc();
+    echo "<div class='row'>\n";
+    echo "<div class='column'>\n";
 
-    echo "<table>\n";
-    echo "<tr>\n";
-    echo "<td>ID: " . $cand['id'] . "</td>\n";
-    echo "</tr>\n";
+    $number = 1;
 
-    echo "<tr>\n";
-    echo "<td colspan=2>UTC: " . $cand['utc'] . "</td>\n";
-    echo "</tr>\n";
+    while ($cand = $result->fetch_assoc()) {
+        // tf-plot
+        if ($cand['tf_plot']) {
+            echo "<a href='detailview.php?id=" . $cand['id'] . "'>
+            <img width='400' src='data:image;base64," . base64_encode($cand['tf_plot']) . "'></a>\n";
+        } else {
+            echo "<a href='detailview.php?id=" . $cand['id'] . "'><div width='400'>&nbsp;</div></a>\n";
+        }
 
-    echo "<tr>\n";
-    echo "<td colspan=2>MJD: " . "</td>\n";
-    echo "</tr>\n";
+        if ( ($number % 3) == 0 ) {
+            echo "</div>\n";
+            echo "<div class='column'>\n";
+        }
 
-    echo "<tr>\n";
-    echo "<td>Pointing: " . $cand['pointing'] . "</td>\n";
-    echo "<td>Beam: " . $cand['beam'] . "</td>\n";
-    echo "</tr>\n";
-
-    echo "<tr>\n";
-    echo "<td>S/N: " . $cand['snr'] . "</td>\n";
-    echo "<td>Width: " . $cand['width'] . " ms</td>\n";
-    echo "</tr>\n";
-
-    echo "<tr>\n";
-    echo "<td>DM: " . $cand['dm'] . " pc cm<sup>-3</sup></td>\n";
-    echo "<td>DM/DM<sub>gal</sub>: " . $cand['dm_ex'] . "</td>\n";
-    echo "</tr>\n";
-
-    echo "<tr>\n";
-    echo "<td>RA: " . $cand['ra'] . "</td>\n";
-    echo "<td>Dec: " . $cand['dec'] . "</td>\n";
-    echo "</tr>\n";
-
-    echo "<tr>\n";
-    echo "<td>Gl: " . $cand['gl'] . " deg</td>\n";
-    echo "<td>Gb: " . $cand['gb'] . " deg</td>\n";
-    echo "</tr>\n";
-    
-    echo "<tr>\n";
-    echo "<td>Viewed: " . $cand['viewed'] . "</td>\n";
-    echo "</tr>";
-    echo "</table>\n";
-
-    // tf-plot
-    if ($cand['tf_plot']) {
-        echo '<img width="600" src="data:image;base64,' . base64_encode($cand['tf_plot']) . '">';
+        $number++;
     }
 
-    // register candidate view
-    // 1) prepare statement
-    $stmt = $conn->prepare("UPDATE candidates SET viewed = ? WHERE id = ?");
-
-    $viewed = $cand['viewed'] + 1;
-    // 2) bind parameters
-    $stmt->bind_param("ii", $viewed , $id);
-
-    // 3) execute
-    $stmt->execute();
+    echo "</div>\n";
+    echo "</div>\n";
 }
 
 // footer
