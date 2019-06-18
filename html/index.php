@@ -59,29 +59,24 @@ if ( $result->num_rows == 0 ) {
     echo "<p>No candidates match selection.</p>";
 
 } else {
-    echo "<div class='row'>\n";
-    echo "<div class='column'>\n";
-
-    $number = 1;
+    echo "<div class='flex-container'>\n";
 
     while ($cand = $result->fetch_assoc()) {
-        // tf-plot
-        if ($cand['tf_plot']) {
-            echo "<a href='detailview.php?id=" . $cand['id'] . "'>
-            <img width='400' src='data:image;base64," . base64_encode($cand['tf_plot']) . "'></a>\n";
-        } else {
-            echo "<a href='detailview.php?id=" . $cand['id'] . "'><div width='400'>&nbsp;</div></a>\n";
-        }
+        echo "<div class='container'>\n";
 
-        if ( ($number % 3) == 0 ) {
-            echo "</div>\n";
-            echo "<div class='column'>\n";
-        }
+        echo "<a href='detailview.php?id=" . $cand['id'] . "'>
+        <img class='image' alt='" . $cand['id'] . "' src='data:image;base64," .
+        base64_encode($cand['tf_plot']) .
+        "'></a>\n";
 
-        $number++;
+        //echo "<div class='overlay'>\n";
+        //echo "<div class='text'>ID: " . $cand['id'] . " S/N: " . $cand['snr'] .
+        //" DM: " . $cand['dm'] . " pc cm<sup>-3</sup></div>\n";
+        //echo "</div>\n";
+        echo "</div>\n";
+
     }
 
-    echo "</div>\n";
     echo "</div>\n";
 }
 
