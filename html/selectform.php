@@ -1,5 +1,40 @@
 <?php
 
+// figure out sorting
+if ( isset($_GET['sort']) ) {
+    $raw_sort = $_GET['sort'];
+} elseif ( isset($_SESSION['sort']) ) {
+    $raw_sort = $_SESSION['sort'];
+} else {
+    $raw_sort = 'id';
+}
+
+if ( filter_var($raw_sort, FILTER_SANITIZE_STRING) ) {
+    $raw_sort = filter_var($raw_sort, FILTER_SANITIZE_STRING);
+} else {
+    die("Sort is invalid.");
+}
+
+switch ($raw_sort):
+    case 'utc':
+        $sort = 'utc';
+        break;
+    case 'snr':
+        $sort = 'snr';
+        break;
+    case 'dm':
+        $sort = 'dm';
+        break;
+    case 'width':
+        $sort = 'width';
+        break;
+    default:
+        $sort = "id";
+endswitch;
+
+// save sorting in session cookie
+$_SESSION['sort'] = $sort;
+
 // figure out pointing
 if ( isset($_GET['pointing']) ) {
   $raw_pointing = $_GET['pointing'];
@@ -72,17 +107,40 @@ if ( ($beam_start != null) && ($beam_end != null) ){
 $_SESSION['beam_start'] = $beam_start;
 $_SESSION['beam_end'] = $beam_end;
 
-// select form
+// sorting options
+$sort_options = array(
+    "utc" => "UTC",
+    "snr" => "S/N",
+    "dm" => "DM",
+    "width" => "Width",
+);
+
+// form
 echo "<form>\n";
 echo "<label for='pointing'>Pointing:</label>\n";
 echo "<input type='text' name='pointing' id='pointing' size='6' maxlength='6' value='" . $pointing . "' />\n";
 
-echo "<label for='beam_start'>Beams:</label>\n";
+echo "<label for='beam_start'>&nbsp;Beams:</label>\n";
 echo "<input type='text' name='beam_start' id='beam_start' size='4' maxlength='4' value='" .
 $beam_start . "' />\n";
 echo "to";
 echo "<input type='text' name='beam_end' id='beam_end' size='4' maxlength='4' value='" .
 $beam_end . "' />\n";
+
+echo "&nbsp;Sort by:\n";
+echo "<select name='sort'>\n";
+
+foreach($sort_options as $key => $value) {
+  if ($key == $sort) {
+      echo "<option value='" . $key . "' selected>" . $value . "</option>\n";
+  } else {
+      echo "<option value='" . $key . "'>" . $value . "</option>\n";
+  }
+}
+
+echo "</select>\n";
+//echo "</div>\n";
+
 echo "<input type='submit' value='Submit' />\n";
 echo "</form>\n";
 
