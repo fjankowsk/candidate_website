@@ -102,15 +102,12 @@ if ( $result->num_rows == 0 ) {
 
     echo "</table>\n";
 
-    echo "<div>\n";
-
     // tf-plot
     if ($cand['tf_plot']) {
-        echo "<img width='600' alt='tf-plot' src='data:image;base64," . base64_encode($cand['tf_plot']) .
-        "'>\n";
+        echo "<div>\n";
+        echo "<img width='600' alt='tf-plot' src='" . $cand['tf_plot'] . "'>\n";
+        echo "</div>\n";
     }
-
-    echo "</div>\n";
 
     // register candidate view
     // 1) prepare statement

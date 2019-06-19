@@ -65,8 +65,8 @@ if ( $result->num_rows == 0 ) {
         " DM: " . $cand['dm'] . "</div>\n";
 
         echo "<a href='detailview.php?id=" . $cand['id'] . "'>
-        <img class='image' alt='" . $cand['id'] . "' src='data:image;base64," .
-        base64_encode($cand['tf_plot']) .
+        <img class='image' alt='" . $cand['id'] . "' src='" .
+        $cand['tf_plot'] .
         "'></a>\n";
 
         echo "</div>\n";
