@@ -12,9 +12,6 @@ include 'header.php';
 // selection form
 include 'selectform.php';
 
-// sort form
-include 'sortform.php';
-
 // helper functions
 include 'helpers.php';
 
