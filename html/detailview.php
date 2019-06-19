@@ -39,8 +39,8 @@ echo "<input type='text' name='id' id='id' size='10' maxlength='10' value='" . $
 echo "<input type='submit' value='Submit' />\n";
 
 // navigation
-echo "<table>\n
-<tr>\n";
+echo "<table>\n";
+echo "<tr>\n";
 
 echo "<th><a href='?id=" . 1 . "'><img src='images/skip-backward-icon.png' border='0'></a></th>\n";
 echo "<th><a href='?id=" . ($id-50) . "'><img src='images/fast-backward-icon.png' border='0'></a></th>\n";
@@ -49,8 +49,8 @@ echo "<th><a href='?id=" . ($id+1) . "'><img src='images/forward-icon.png' borde
 echo "<th><a href='?id=" . ($id+50) . "'><img src='images/fast-forward-icon.png' border='0'></a></th>\n";
 echo "<th><a href='?'><img src='images/skip-forward-icon.png' border='0'></a></th>\n";
 
-echo "</tr>\n
-</table>\n";
+echo "</tr>\n";
+echo "</table>\n";
 
 // get candidates
 $result = $conn->query("SELECT * FROM candidates WHERE id = " . $id);
@@ -64,6 +64,7 @@ if ( $result->num_rows == 0 ) {
     echo "<table>\n";
     echo "<tr>\n";
     echo "<td>ID: " . $cand['id'] . "</td>\n";
+    echo "<td>Viewed: " . $cand['viewed'] . "</td>\n";
     echo "</tr>\n";
 
     echo "<tr>\n";
@@ -98,16 +99,18 @@ if ( $result->num_rows == 0 ) {
     echo "<td>Gl: " . $cand['gl'] . " deg</td>\n";
     echo "<td>Gb: " . $cand['gb'] . " deg</td>\n";
     echo "</tr>\n";
-    
-    echo "<tr>\n";
-    echo "<td>Viewed: " . $cand['viewed'] . "</td>\n";
-    echo "</tr>";
+
     echo "</table>\n";
+
+    echo "<div>\n";
 
     // tf-plot
     if ($cand['tf_plot']) {
-        echo '<img width="600" src="data:image;base64,' . base64_encode($cand['tf_plot']) . '">';
+        echo "<img width='600' alt='tf-plot' src='data:image;base64," . base64_encode($cand['tf_plot']) .
+        "'>\n";
     }
+
+    echo "</div>\n";
 
     // register candidate view
     // 1) prepare statement
