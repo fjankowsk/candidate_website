@@ -47,16 +47,13 @@ echo "</tr>\n
 </table>\n";
 
 // get candidates
-$sql = get_sql_query($pointing, $beam_start, $beam_end, $sort, $limit, $offset);
-//echo "<p>SQL query: " . $sql . "</p>\n";
-
-$result = $conn->query($sql);
+$result = get_sql_result($conn, $pointing, $beam_start, $beam_end, $sort, $limit, $offset);
 
 if ( $result->num_rows == 0 ) {
     echo "<p>No candidates match selection.</p>";
 
 } else {
-    echo "<p>" . $result->num_rows . " candidates match selection.</p>\n";
+    //echo "<p>" . $result->num_rows . " candidates match selection.</p>\n";
 
     echo "<table>\n
     <tr>\n
@@ -89,9 +86,9 @@ if ( $result->num_rows == 0 ) {
         echo "<tr>\n";
         echo "<td><a href='detailview.php?id=" . $cand['id'] . "'>" . $cand['id'] . "</a></td>\n";
         echo "<td>" . $cand['utc'] . "</td>\n";
-        echo "<td>" . $cand['snr'] . "</td>\n";
-        echo "<td>" . $cand['dm'] . "</td>\n";
-        echo "<td>" . $cand['width'] . "</td>\n";
+        echo "<td>" . sprintf("%.1f", $cand['snr']) . "</td>\n";
+        echo "<td>" . sprintf("%.1f", $cand['dm']) . "</td>\n";
+        echo "<td>" . sprintf("%.1f", $cand['width']) . "</td>\n";
         echo "<td>" . $cand['pointing'] . "</td>\n";
         echo "<td>" . $cand['beam'] . "</td>\n";
         echo "<td>" . $cand['ra'] . "</td>\n";
