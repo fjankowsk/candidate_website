@@ -18,7 +18,7 @@ if ( isset($_GET['id']) ) {
     $raw_id = 1;
 }
   
-if ( !filter_var($raw_id, FILTER_VALIDATE_INT) === false ) {
+if ( filter_var($raw_id, FILTER_VALIDATE_INT) ) {
     $id = filter_var($raw_id, FILTER_SANITIZE_NUMBER_INT);
 } else {
     die("ID is invalid.");
@@ -53,7 +53,12 @@ echo "</tr>\n";
 echo "</table>\n";
 
 // get candidates
-$result = $conn->query("SELECT * FROM candidates WHERE id = " . $id);
+$stmt = $conn->prepare("SELECT * FROM candidates WHERE id = ?");
+
+$stmt->bind_param("i", $id);
+$stmt->execute();
+
+$result = $stmt->get_result();
 
 if ( $result->num_rows == 0 ) {
     echo "<p>Candidate not found.</p>";
@@ -72,7 +77,7 @@ if ( $result->num_rows == 0 ) {
     echo "</tr>\n";
 
     echo "<tr>\n";
-    echo "<td colspan=2>MJD: " . "</td>\n";
+    echo "<td colspan=2>MJD: " . $cand['mjd'] . "</td>\n";
     echo "</tr>\n";
 
     echo "<tr>\n";
@@ -110,14 +115,11 @@ if ( $result->num_rows == 0 ) {
     }
 
     // register candidate view
-    // 1) prepare statement
     $stmt = $conn->prepare("UPDATE candidates SET viewed = ? WHERE id = ?");
 
     $viewed = $cand['viewed'] + 1;
-    // 2) bind parameters
     $stmt->bind_param("ii", $viewed , $id);
 
-    // 3) execute
     $stmt->execute();
 }
 
