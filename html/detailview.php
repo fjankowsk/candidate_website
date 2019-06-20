@@ -77,7 +77,7 @@ if ( $result->num_rows == 0 ) {
     echo "</tr>\n";
 
     echo "<tr>\n";
-    echo "<td colspan=2>MJD: " . $cand['mjd'] . "</td>\n";
+    echo "<td colspan=2>MJD: " . sprintf("%.8f", $cand['mjd']) . "</td>\n";
     echo "</tr>\n";
 
     echo "<tr>\n";
@@ -86,13 +86,13 @@ if ( $result->num_rows == 0 ) {
     echo "</tr>\n";
 
     echo "<tr>\n";
-    echo "<td>S/N: " . $cand['snr'] . "</td>\n";
-    echo "<td>Width: " . $cand['width'] . " ms</td>\n";
+    echo "<td>S/N: " . sprintf("%.2f", $cand['snr']) . "</td>\n";
+    echo "<td>Width: " . sprintf("%.2f", $cand['width']) . " ms</td>\n";
     echo "</tr>\n";
 
     echo "<tr>\n";
-    echo "<td>DM: " . $cand['dm'] . " pc cm<sup>-3</sup></td>\n";
-    echo "<td>DM/DM<sub>gal</sub>: " . $cand['dm_ex'] . "</td>\n";
+    echo "<td>DM: " . sprintf("%.2f", $cand['dm']) . " pc cm<sup>-3</sup></td>\n";
+    echo "<td>DM/DM<sub>gal</sub>: " . sprintf("%.2f", $cand['dm_ex']) . "</td>\n";
     echo "</tr>\n";
 
     echo "<tr>\n";
@@ -101,8 +101,8 @@ if ( $result->num_rows == 0 ) {
     echo "</tr>\n";
 
     echo "<tr>\n";
-    echo "<td>Gl: " . $cand['gl'] . " deg</td>\n";
-    echo "<td>Gb: " . $cand['gb'] . " deg</td>\n";
+    echo "<td>Gl: " . sprintf("%.3f", $cand['gl']) . " deg</td>\n";
+    echo "<td>Gb: " . sprintf("%.3f", $cand['gb']) . " deg</td>\n";
     echo "</tr>\n";
 
     echo "</table>\n";
