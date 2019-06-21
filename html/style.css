@@ -31,9 +31,18 @@ table, th, td {
     border-spacing: 4px;
 }
 
-.image {
-    width: 400px;
-    max-width: 400px;
+img.detail {
+    width: 900px;
+    max-width: 900px;
+    margin-top: 4px;
+    margin-bottom: 4px;
+    margin-left: 4px;
+    margin-right: 4px;
+}
+
+img.grid {
+    width: 650px;
+    max-width: 650px;
     margin-top: 4px;
     margin-bottom: 4px;
     margin-left: 4px;

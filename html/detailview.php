@@ -107,10 +107,9 @@ if ( $result->num_rows == 0 ) {
 
     echo "</table>\n";
 
-    // tf-plot
     if ($cand['tf_plot']) {
         echo "<div>\n";
-        echo "<img width='600' alt='tf-plot' src='" . $cand['tf_plot'] . "'>\n";
+        echo "<img class='detail' alt='tf-plot' src='" . $cand['tf_plot'] . "'>\n";
         echo "</div>\n";
     }
 

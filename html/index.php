@@ -34,7 +34,7 @@ if ( $offset < 0 ) {
 }
 
 // navigation
-$limit = 6;
+$limit = 4;
 echo "<table>\n
 <tr>\n";
 
@@ -59,12 +59,13 @@ if ( $result->num_rows == 0 ) {
         echo "<div class='container'>\n";
 
         echo "<div class='text'>ID: " . $cand['id'] .
-        " S/N: " . sprintf("%.1f", $cand['snr']) .
-        " DM: " . sprintf("%.1f", $cand['dm']) .
+        ", S/N: " . sprintf("%.1f", $cand['snr']) .
+        ", DM: " . sprintf("%.1f", $cand['dm']) .
+        ", Beam: " . $cand['beam'] .
         "</div>\n";
 
         echo "<a href='detailview.php?id=" . $cand['id'] . "'>
-        <img class='image' alt='" . $cand['id'] . "' src='" .
+        <img class='grid' alt='" . $cand['id'] . "' src='" .
         $cand['tf_plot'] .
         "'></a>\n";
 
