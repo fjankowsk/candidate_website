@@ -114,7 +114,7 @@ if ( $result->num_rows == 0 ) {
     }
 
     // register candidate view
-    $stmt = $conn->prepare("UPDATE candidates SET viewed = ? WHERE id = ?");
+    $stmt = $conn->prepare("UPDATE spscandidate SET viewed = ? WHERE id = ?");
 
     $viewed = $cand['viewed'] + 1;
     $stmt->bind_param("ii", $viewed , $id);
