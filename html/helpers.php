@@ -14,7 +14,7 @@ function refValues($arr){
 
 function get_sql_result($conn, $pointing, $beam_start, $beam_end, $sort, $limit, $offset) {
     // construct sql query
-    $sql = "SELECT * FROM candidates";
+    $sql = "SELECT * FROM spscandidate";
 
     $stack = array();
 

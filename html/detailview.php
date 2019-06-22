@@ -53,7 +53,7 @@ echo "</tr>\n";
 echo "</table>\n";
 
 // get candidates
-$stmt = $conn->prepare("SELECT * FROM candidates WHERE id = ?");
+$stmt = $conn->prepare("SELECT * FROM spscandidate WHERE id = ?");
 
 $stmt->bind_param("i", $id);
 $stmt->execute();
