@@ -2,5 +2,6 @@
   "server": "localhost",
   "username": "meertrap_ro",
   "password": "XXX",
-  "database": "meertrap"
+  "database": "meertrap",
+  "port": 3306
 }
