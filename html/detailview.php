@@ -53,7 +53,54 @@ echo "</tr>\n";
 echo "</table>\n";
 
 // get candidates
-$stmt = $conn->prepare("SELECT * FROM spscandidate WHERE id = ?");
+$sql_query = "
+SELECT spscandidate.id as cand_id,
+spscandidate.viewed,
+spscandidate.utc,
+spscandidate.mjd,
+spscandidate.snr,
+spscandidate.dm,
+spscandidate.dm_ex,
+spscandidate.width,
+spscandidate.dynamic_spectrum,
+
+observation.id as obs_id,
+observation.field_name as field_name,
+observation.utc_start as obs_utc_start,
+beamconfig.nbeam,
+observation.boresight_ra,
+observation.boresight_dec,
+
+beam.number as beam_number, beam.coherent as beam_coherent,
+beam.ra, beam.dec, beam.gl, beam.gb,
+
+scheduleblock.sb_id as sb_id,
+scheduleblock.sb_id_code as sb_id_code
+FROM spscandidate
+
+LEFT JOIN observation_spscandidate
+ON spscandidate.id=observation_spscandidate.spscandidate
+LEFT JOIN observation
+ON observation_spscandidate.observation=observation.id
+
+LEFT JOIN beam_spscandidate
+ON spscandidate.id=beam_spscandidate.spscandidate
+LEFT JOIN beam
+ON beam_spscandidate.beam=beam.id
+
+LEFT JOIN observation_scheduleblock
+ON observation.id=observation_scheduleblock.observation
+LEFT JOIN scheduleblock
+ON observation_scheduleblock.scheduleblock=scheduleblock.id
+
+LEFT JOIN beamconfig_observation
+ON observation.id=beamconfig_observation.observation
+LEFT JOIN beamconfig
+ON beamconfig_observation.beamconfig=beamconfig.id
+
+WHERE spscandidate.id = ?";
+
+$stmt = $conn->prepare($sql_query);
 
 $stmt->bind_param("i", $id);
 $stmt->execute();
@@ -66,23 +113,12 @@ if ( $result->num_rows == 0 ) {
 } else {
     $cand = $result->fetch_assoc();
 
+    // candidate
+    echo "<h3>Candidate</h3>\n";
     echo "<table>\n";
     echo "<tr>\n";
-    echo "<td>ID: " . $cand['id'] . "</td>\n";
-    echo "<td>Viewed: " . $cand['viewed'] . "</td>\n";
-    echo "</tr>\n";
-
-    echo "<tr>\n";
-    echo "<td colspan=2>UTC: " . $cand['utc'] . "</td>\n";
-    echo "</tr>\n";
-
-    echo "<tr>\n";
-    echo "<td colspan=2>MJD: " . sprintf("%.8f", $cand['mjd']) . "</td>\n";
-    echo "</tr>\n";
-
-    echo "<tr>\n";
-    echo "<td>Pointing: " . $cand['pointing'] . "</td>\n";
-    echo "<td>Beam: " . $cand['beam'] . "</td>\n";
+    echo "<td>ID: " . $cand['cand_id'] . "</td>\n";
+    echo "<td>Views: " . $cand['viewed'] . "</td>\n";
     echo "</tr>\n";
 
     echo "<tr>\n";
@@ -92,7 +128,25 @@ if ( $result->num_rows == 0 ) {
 
     echo "<tr>\n";
     echo "<td>DM: " . sprintf("%.2f", $cand['dm']) . " pc cm<sup>-3</sup></td>\n";
-    echo "<td>DM/DM<sub>gal</sub>: " . sprintf("%.2f", $cand['dm_ex']) . "</td>\n";
+    //echo "<td>DM/DM<sub>gal</sub>: " . sprintf("%.2f", $cand['dm_ex']) . "</td>\n";
+    echo "</tr>\n";
+    
+    echo "<tr>\n";
+    echo "<td colspan=2>UTC: " . $cand['utc'] . "</td>\n";
+    echo "</tr>\n";
+
+    echo "<tr>\n";
+    echo "<td colspan=2>MJD: " . sprintf("%.8f", $cand['mjd']) . "</td>\n";
+    echo "</tr>\n";
+    echo "</tr>\n";
+    echo "</table>\n";
+
+    // beam
+    echo "<h3>Beam</h3>\n";
+    echo "<table>\n";
+    echo "<tr>\n";
+    echo "<td>Number: " . $cand['beam_number'] . "</td>\n";
+    echo "<td>Coherent: " . $cand['beam_coherent'] . "</td>\n";
     echo "</tr>\n";
 
     echo "<tr>\n";
@@ -104,7 +158,41 @@ if ( $result->num_rows == 0 ) {
     echo "<td>Gl: " . sprintf("%.3f", $cand['gl']) . " deg</td>\n";
     echo "<td>Gb: " . sprintf("%.3f", $cand['gb']) . " deg</td>\n";
     echo "</tr>\n";
+    echo "</table>\n";
 
+    // observation
+    echo "<h3>Observation</h3>\n";
+    echo "<table>\n";
+    echo "<tr>\n";
+    echo "<td>ID: " . $cand['obs_id'] . "</td>\n";
+    echo "<td>UTC start: " . $cand['obs_utc_start'] . "</td>\n";
+    echo "</tr>\n";
+
+    echo "<tr>\n";
+    echo "<td>Total beams: " . $cand['nbeam'] . "</td>\n";
+    echo "</tr>\n";
+    echo "</table>\n";
+
+    // boresight
+    echo "<h3>Boresight</h3>\n";
+    echo "<table>\n";
+    echo "<tr>\n";
+    echo "<td>Field: " . $cand['field_name'] . "</td>\n";
+    echo "</tr>\n";
+
+    echo "<tr>\n";
+    echo "<td>RA: " . $cand['boresight_ra'] . "</td>\n";
+    echo "<td>Dec: " . $cand['boresight_dec'] . "</td>\n";
+    echo "</tr>\n";
+    echo "</table>\n";
+
+    // schedule block
+    echo "<h3>Schedule Block</h3>\n";
+    echo "<table>\n";
+    echo "<tr>\n";
+    echo "<td>SB: " . $cand['sb_id'] . "</td>\n";
+    echo "<td>Code: " . $cand['sb_id_code'] . "</td>\n";
+    echo "</tr>\n";
     echo "</table>\n";
 
     if ($cand['dynamic_spectrum']) {
