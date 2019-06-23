@@ -2,7 +2,5 @@
   "server": "localhost",
   "username": "meertrap_ro",
   "password": "XXX",
-  "database": "meertrap",
-  "port": "",
-  "socket": "/raid/jankowsk/mariadb_run/mysqld.sock"
+  "database": "meertrap"
 }
