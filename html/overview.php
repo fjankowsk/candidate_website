@@ -47,7 +47,7 @@ echo "</tr>\n
 </table>\n";
 
 // get candidates
-$result = get_sql_result($conn, $pointing, $beam_start, $beam_end, $sort, $limit, $offset);
+$result = get_sql_result($conn, $sb, $beam_start, $beam_end, $sort, $limit, $offset);
 
 if ( $result->num_rows == 0 ) {
     echo "<p>No candidates match selection.</p>";
@@ -62,7 +62,7 @@ if ( $result->num_rows == 0 ) {
     <th>S/N</th>\n
     <th>DM</th>\n
     <th>Width</th>\n
-    <th>Pointing</th>\n
+    <th>SB</th>\n
     <th>Beam</th>\n
     <th>RA</th>\n
     <th>Dec</th>\n
@@ -89,7 +89,7 @@ if ( $result->num_rows == 0 ) {
         echo "<td>" . sprintf("%.1f", $cand['snr']) . "</td>\n";
         echo "<td>" . sprintf("%.1f", $cand['dm']) . "</td>\n";
         echo "<td>" . sprintf("%.1f", $cand['width']) . "</td>\n";
-        echo "<td>" . $cand['pointing'] . "</td>\n";
+        echo "<td>" . $cand['sb'] . "</td>\n";
         echo "<td>" . $cand['beam'] . "</td>\n";
         echo "<td>" . $cand['ra'] . "</td>\n";
         echo "<td>" . $cand['dec'] . "</td>\n";

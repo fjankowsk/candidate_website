@@ -12,17 +12,17 @@ function refValues($arr){
     return $arr;
 }
 
-function get_sql_result($conn, $pointing, $beam_start, $beam_end, $sort, $limit, $offset) {
+function get_sql_result($conn, $sb, $beam_start, $beam_end, $sort, $limit, $offset) {
     // construct sql query
     $sql = "SELECT * FROM spscandidate";
 
     $stack = array();
 
-    if ( $pointing != null ) {
-        $sql_pointing = "pointing = ?";
-        array_push($stack, array($pointing => "i"));
+    if ( $sb != null ) {
+        $sql_sb = "sb = ?";
+        array_push($stack, array($sb => "i"));
     } else {
-        $sql_pointing = null;
+        $sql_sb = null;
     }
 
     if ( $beam_start != null ) {
@@ -40,7 +40,7 @@ function get_sql_result($conn, $pointing, $beam_start, $beam_end, $sort, $limit,
     }
 
     $where_used = FALSE;
-    foreach ( array($sql_pointing, $sql_beam_start, $sql_beam_end) as $var ) {
+    foreach ( array($sql_sb, $sql_beam_start, $sql_beam_end) as $var ) {
         if ( $var != null ) {
             if ( !$where_used ) {
                 $sql .= " WHERE " . $var;

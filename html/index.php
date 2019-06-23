@@ -47,7 +47,7 @@ echo "</tr>\n
 </table>\n";
 
 // get candidates
-$result = get_sql_result($conn, $pointing, $beam_start, $beam_end, $sort, $limit, $offset);
+$result = get_sql_result($conn, $sb, $beam_start, $beam_end, $sort, $limit, $offset);
 
 if ( $result->num_rows == 0 ) {
     echo "<p>No candidates match selection.</p>";

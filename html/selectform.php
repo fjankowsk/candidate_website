@@ -35,27 +35,27 @@ endswitch;
 // save sorting in session cookie
 $_SESSION['sort'] = $sort;
 
-// figure out pointing
-if ( isset($_GET['pointing']) ) {
-  $raw_pointing = $_GET['pointing'];
-} elseif ( isset($_SESSION['pointing']) ) {
-  $raw_pointing = $_SESSION['pointing'];
+// figure out schedule block
+if ( isset($_GET['sb']) ) {
+  $raw_sb = $_GET['sb'];
+} elseif ( isset($_SESSION['sb']) ) {
+  $raw_sb = $_SESSION['sb'];
 } else {
-  $raw_pointing = null;
+  $raw_sb = null;
 }
 
 $filter_opts = array("options" => array("min_range"=>1));
 
-if ( $raw_pointing == null ) {
-    $pointing = null;
-} elseif ( filter_var($raw_pointing, FILTER_VALIDATE_INT, $filter_opts) ) {
-    $pointing = filter_var($raw_pointing, FILTER_SANITIZE_NUMBER_INT);
+if ( $raw_sb == null ) {
+    $sb = null;
+} elseif ( filter_var($raw_sb, FILTER_VALIDATE_INT, $filter_opts) ) {
+    $sb = filter_var($raw_sb, FILTER_SANITIZE_NUMBER_INT);
 } else {
-    die("Pointing is invalid.");
+    die("Schedule block is invalid.");
 }
 
-// save pointing in session cookie
-$_SESSION['pointing'] = $pointing;
+// save sb in session cookie
+$_SESSION['sb'] = $sb;
 
 // figure out beam_start
 if ( isset($_GET['beam_start']) ) {
@@ -117,8 +117,8 @@ $sort_options = array(
 
 // form
 echo "<form>\n";
-echo "<label for='pointing'>Pointing:</label>\n";
-echo "<input type='text' name='pointing' id='pointing' size='6' maxlength='6' value='" . $pointing . "' />\n";
+echo "<label for='sb'>SB:</label>\n";
+echo "<input type='text' name='sb' id='sb' size='6' maxlength='6' value='" . $sb . "' />\n";
 
 echo "<label for='beam_start'>&nbsp;Beams:</label>\n";
 echo "<input type='text' name='beam_start' id='beam_start' size='4' maxlength='4' value='" .
