@@ -64,9 +64,11 @@ if ( $result->num_rows == 0 ) {
         ", Beam: " . $cand['beam'] .
         "</div>\n";
 
+        $dynamic_spectrum = "candidates/" . $cand['dynamic_spectrum'];
+
         echo "<a href='detailview.php?id=" . $cand['id'] . "'>
         <img class='grid' alt='" . $cand['id'] . "' src='" .
-        $cand['tf_plot'] .
+        $dynamic_spectrum .
         "'></a>\n";
 
         echo "</div>\n";
