@@ -41,14 +41,12 @@ if ( isset($_GET['sb']) ) {
 } elseif ( isset($_SESSION['sb']) ) {
   $raw_sb = $_SESSION['sb'];
 } else {
-  $raw_sb = null;
+  $raw_sb = 1;
 }
 
 $filter_opts = array("options" => array("min_range"=>1));
 
-if ( $raw_sb == null ) {
-    $sb = null;
-} elseif ( filter_var($raw_sb, FILTER_VALIDATE_INT, $filter_opts) ) {
+if ( filter_var($raw_sb, FILTER_VALIDATE_INT, $filter_opts) ) {
     $sb = filter_var($raw_sb, FILTER_SANITIZE_NUMBER_INT);
 } else {
     die("Schedule block is invalid.");
