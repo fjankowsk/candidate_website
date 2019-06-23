@@ -84,13 +84,14 @@ if ( $result->num_rows == 0 ) {
 
     while ($cand = $result->fetch_assoc()) {
         echo "<tr>\n";
-        echo "<td><a href='detailview.php?id=" . $cand['id'] . "'>" . $cand['id'] . "</a></td>\n";
+        echo "<td><a href='detailview.php?id=" . $cand['cand_id'] . "'>" .
+        $cand['cand_id'] . "</a></td>\n";
         echo "<td>" . $cand['utc'] . "</td>\n";
         echo "<td>" . sprintf("%.1f", $cand['snr']) . "</td>\n";
         echo "<td>" . sprintf("%.1f", $cand['dm']) . "</td>\n";
         echo "<td>" . sprintf("%.1f", $cand['width']) . "</td>\n";
         echo "<td>" . $cand['sb'] . "</td>\n";
-        echo "<td>" . $cand['beam'] . "</td>\n";
+        echo "<td>" . $cand['beam_number'] . "</td>\n";
         echo "<td>" . $cand['ra'] . "</td>\n";
         echo "<td>" . $cand['dec'] . "</td>\n";
         echo "<td>" . $cand['viewed'] . "</td>\n";

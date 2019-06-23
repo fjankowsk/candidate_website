@@ -58,16 +58,16 @@ if ( $result->num_rows == 0 ) {
     while ($cand = $result->fetch_assoc()) {
         echo "<div class='container'>\n";
 
-        echo "<div class='text'>ID: " . $cand['id'] .
+        echo "<div class='text'>ID: " . $cand['cand_id'] .
         ", S/N: " . sprintf("%.1f", $cand['snr']) .
         ", DM: " . sprintf("%.1f", $cand['dm']) .
-        ", Beam: " . $cand['beam'] .
+        ", Beam: " . $cand['beam_number'] .
         "</div>\n";
 
         $dynamic_spectrum = "candidates/" . $cand['dynamic_spectrum'];
 
-        echo "<a href='detailview.php?id=" . $cand['id'] . "'>
-        <img class='grid' alt='" . $cand['id'] . "' src='" .
+        echo "<a href='detailview.php?id=" . $cand['cand_id'] . "'>
+        <img class='grid' alt='" . $cand['cand_id'] . "' src='" .
         $dynamic_spectrum .
         "'></a>\n";
 
