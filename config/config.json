@@ -3,5 +3,6 @@
   "username": "meertrap_ro",
   "password": "XXX",
   "database": "meertrap",
-  "port": 3306
+  "port": "",
+  "socket": "/raid/jankowsk/mariadb_run/mysqld.sock"
 }
