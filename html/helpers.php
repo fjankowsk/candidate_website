@@ -14,7 +14,6 @@ function refValues($arr){
 
 function get_sql_result($conn, $sb, $beam_start, $beam_end, $sort, $limit, $offset) {
     // construct sql query
-
     $sql = "
     SELECT spscandidate.id as cand_id,
     spscandidate.viewed,
@@ -44,16 +43,11 @@ function get_sql_result($conn, $sb, $beam_start, $beam_end, $sort, $limit, $offs
     ON observation.id=observation_scheduleblock.observation
     LEFT JOIN scheduleblock
     ON observation_scheduleblock.scheduleblock=scheduleblock.id
-    ";
+    
+    WHERE scheduleblock.id = ?";
 
     $stack = array();
-
-    if ( $sb != null ) {
-        $sql_sb = "scheduleblock.id = ?";
-        array_push($stack, array($sb => "i"));
-    } else {
-        $sql_sb = null;
-    }
+    array_push($stack, array($sb => "i"));
 
     if ( $beam_start != null ) {
         $sql_beam_start = "beam.number >= ?";
@@ -69,20 +63,15 @@ function get_sql_result($conn, $sb, $beam_start, $beam_end, $sort, $limit, $offs
         $sql_beam_end = null;
     }
 
-    $where_used = FALSE;
-    foreach ( array($sql_sb, $sql_beam_start, $sql_beam_end) as $var ) {
+    foreach ( array($sql_beam_start, $sql_beam_end) as $var ) {
         if ( $var != null ) {
-            if ( !$where_used ) {
-                $sql .= " WHERE " . $var;
-                $where_used = TRUE;
-            } else {
-                $sql .= " AND " . $var;
-            }
+            $sql .= " AND " . $var;
         }
     }
 
     $sql .= " ORDER BY ? DESC LIMIT ? OFFSET ?";
-    array_push($stack, array($sort => "s"));
+    $sort_str = "spscandidate." . $sort;
+    array_push($stack, array($sort_str => "s"));
     array_push($stack, array($limit => "i"));
     array_push($stack, array($offset => "i"));
 
