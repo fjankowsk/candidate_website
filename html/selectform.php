@@ -125,18 +125,18 @@ echo "to";
 echo "<input type='text' name='beam_end' id='beam_end' size='4' maxlength='4' value='" .
 $beam_end . "' />\n";
 
-echo "&nbsp;Sort by:\n";
-echo "<select name='sort'>\n";
+//echo "&nbsp;Sort by:\n";
+//echo "<select name='sort'>\n";
 
-foreach($sort_options as $key => $value) {
-  if ($key == $sort) {
-      echo "<option value='" . $key . "' selected>" . $value . "</option>\n";
-  } else {
-      echo "<option value='" . $key . "'>" . $value . "</option>\n";
-  }
-}
+// foreach($sort_options as $key => $value) {
+//   if ($key == $sort) {
+//       echo "<option value='" . $key . "' selected>" . $value . "</option>\n";
+//   } else {
+//       echo "<option value='" . $key . "'>" . $value . "</option>\n";
+//   }
+// }
 
-echo "</select>\n";
+// echo "</select>\n";
 //echo "</div>\n";
 
 echo "<input type='submit' value='Submit' />\n";
