@@ -64,12 +64,16 @@ if ( $result->num_rows == 0 ) {
         ", Beam: " . $cand['beam_number'] .
         "</div>\n";
 
-        $dynamic_spectrum = "candidates/" . $cand['dynamic_spectrum'];
+        if ($cand['dynamic_spectrum']) {
+            $dynamic_spectrum = "candidates/" . $cand['dynamic_spectrum'];
 
-        echo "<a href='detailview.php?id=" . $cand['cand_id'] . "'>
-        <img class='grid' alt='" . $cand['cand_id'] . "' src='" .
-        $dynamic_spectrum .
-        "'></a>\n";
+            echo "<a href='detailview.php?id=" . $cand['cand_id'] . "'>
+            <img class='grid' alt='" . $cand['cand_id'] . "' src='" .
+            $dynamic_spectrum .
+            "'></a>\n";
+        } else {
+            echo "<div class='placeholder'>&nbsp</div>";
+        }
 
         echo "</div>\n";
 

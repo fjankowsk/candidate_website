@@ -49,6 +49,11 @@ img.grid {
     margin-right: 4px;
 }
 
+div.placeholder {
+    width: 650px;
+    max-width: 650px;
+}
+
 .flex-container {
     display: flex;
     flex-direction: row;
