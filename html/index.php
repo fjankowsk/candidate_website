@@ -72,7 +72,7 @@ if ( $result->num_rows == 0 ) {
             $dynamic_spectrum .
             "'></a>\n";
         } else {
-            echo "<div class='placeholder'>&nbsp</div>";
+            echo "<div class='placeholder'>No candidate plot found.</div>";
         }
 
         echo "</div>\n";
