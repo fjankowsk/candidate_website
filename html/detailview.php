@@ -113,6 +113,15 @@ if ( $result->num_rows == 0 ) {
 } else {
     $cand = $result->fetch_assoc();
 
+    if ($cand['dynamic_spectrum']) {
+        $dynamic_spectrum = "candidates/" . $cand['dynamic_spectrum'];
+
+        echo "<div>\n";
+        echo "<img class='detail' alt='dynamic spectrum' src='" . 
+        $dynamic_spectrum . "'>\n";
+        echo "</div>\n";
+    }
+
     // candidate
     echo "<h3>Candidate</h3>\n";
     echo "<table>\n";
@@ -194,15 +203,6 @@ if ( $result->num_rows == 0 ) {
     echo "<td>Code: " . $cand['sb_id_code'] . "</td>\n";
     echo "</tr>\n";
     echo "</table>\n";
-
-    if ($cand['dynamic_spectrum']) {
-        $dynamic_spectrum = "candidates/" . $cand['dynamic_spectrum'];
-
-        echo "<div>\n";
-        echo "<img class='detail' alt='dynamic spectrum' src='" . 
-        $dynamic_spectrum . "'>\n";
-        echo "</div>\n";
-    }
 
     // register candidate view
     $stmt = $conn->prepare("UPDATE spscandidate SET viewed = ? WHERE id = ?");
