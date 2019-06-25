@@ -90,7 +90,7 @@ if ( $result->num_rows == 0 ) {
         echo "<td>" . sprintf("%.1f", $cand['snr']) . "</td>\n";
         echo "<td>" . sprintf("%.1f", $cand['dm']) . "</td>\n";
         echo "<td>" . sprintf("%.1f", $cand['width']) . "</td>\n";
-        echo "<td>" . $cand['sb'] . "</td>\n";
+        echo "<td>" . $cand['sb_id'] . "</td>\n";
         echo "<td>" . $cand['beam_number'] . "</td>\n";
         echo "<td>" . $cand['ra'] . "</td>\n";
         echo "<td>" . $cand['dec'] . "</td>\n";

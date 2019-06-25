@@ -26,7 +26,7 @@ function get_sql_result($conn, $sb, $beam_start, $beam_end, $sort, $limit, $offs
     beam.number as beam_number,
     beam.ra, beam.dec,
     
-    scheduleblock.id as sb
+    scheduleblock.sb_id as sb_id
     FROM spscandidate
 
     LEFT JOIN observation_spscandidate
@@ -44,7 +44,8 @@ function get_sql_result($conn, $sb, $beam_start, $beam_end, $sort, $limit, $offs
     LEFT JOIN scheduleblock
     ON observation_scheduleblock.scheduleblock=scheduleblock.id
     
-    WHERE scheduleblock.id = ?";
+    WHERE spscandidate.dm > 15
+    AND scheduleblock.sb_id = ?";
 
     $stack = array();
     array_push($stack, array($sb => "i"));
