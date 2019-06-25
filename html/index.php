@@ -6,6 +6,9 @@ session_start();
 // connect to database
 require_once('dbconnection.php');
 
+// include default variables
+include 'defaults.php';
+
 // header
 include 'header.php';
 
@@ -34,20 +37,19 @@ if ( $offset < 0 ) {
 }
 
 // navigation
-$limit = 4;
 echo "<table>\n
 <tr>\n";
 
-echo "<th><a href='?offset=" . ($offset - $limit) . "'>
+echo "<th><a href='?offset=" . ($offset - $GRIDVIEW_LIMIT) . "'>
 <img src='images/backward-icon.png' border='0'></a></th>\n";
-echo "<th><a href='?offset=" . ($offset + $limit) . "'>
+echo "<th><a href='?offset=" . ($offset + $GRIDVIEW_LIMIT) . "'>
 <img src='images/forward-icon.png' border='0'></a></th>\n";
 
 echo "</tr>\n
 </table>\n";
 
 // get candidates
-$result = get_sql_result($conn, $sb, $beam_start, $beam_end, $sort, $limit, $offset);
+$result = get_sql_result($conn, $sb, $beam_start, $beam_end, $sort, $GRIDVIEW_LIMIT, $offset);
 
 if ( $result->num_rows == 0 ) {
     echo "<p>No candidates match selection.</p>";

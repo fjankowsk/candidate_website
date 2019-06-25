@@ -6,6 +6,9 @@ session_start();
 // connect to database
 require_once('dbconnection.php');
 
+// include default variables
+include 'defaults.php';
+
 // header
 include 'header.php';
 
@@ -15,7 +18,7 @@ if ( isset($_GET['id']) ) {
 } elseif ( isset($_SESSION['id']) ) {
     $raw_id = $_SESSION['id'];
 } else {
-    $raw_id = 1;
+    $raw_id = $START_ID;
 }
   
 if ( filter_var($raw_id, FILTER_VALIDATE_INT) ) {
@@ -26,7 +29,7 @@ if ( filter_var($raw_id, FILTER_VALIDATE_INT) ) {
 
 // treat negative case
 if ( $id < 0 ) {
-    $id = 1;
+    $id = $START_ID;
 }
   
 // save id in session cookie
