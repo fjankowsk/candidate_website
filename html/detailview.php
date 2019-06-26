@@ -148,7 +148,7 @@ if ( $result->num_rows == 0 ) {
     echo "</tr>\n";
 
     echo "<tr>\n";
-    echo "<td colspan=2>MJD: " . sprintf("%.8f", $cand['mjd']) . "</td>\n";
+    echo "<td colspan=2>MJD: " . sprintf("%.10f", $cand['mjd']) . "</td>\n";
     echo "</tr>\n";
     echo "</tr>\n";
     echo "</table>\n";
@@ -166,10 +166,13 @@ if ( $result->num_rows == 0 ) {
     echo "<td>Dec: " . $cand['dec'] . "</td>\n";
     echo "</tr>\n";
 
-    echo "<tr>\n";
-    echo "<td>Gl: " . sprintf("%.3f", $cand['gl']) . " deg</td>\n";
-    echo "<td>Gb: " . sprintf("%.3f", $cand['gb']) . " deg</td>\n";
-    echo "</tr>\n";
+    if ($cand['gl']) {
+        echo "<tr>\n";
+        echo "<td>Gl: " . sprintf("%.3f", $cand['gl']) . " deg</td>\n";
+        echo "<td>Gb: " . sprintf("%.3f", $cand['gb']) . " deg</td>\n";
+        echo "</tr>\n";
+    }
+
     echo "</table>\n";
 
     // observation
