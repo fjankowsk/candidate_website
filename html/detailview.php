@@ -45,7 +45,7 @@ echo "<input type='submit' value='Submit' />\n";
 echo "<table>\n";
 echo "<tr>\n";
 
-echo "<th><a href='?id=" . 1 . "'><img src='images/skip-backward-icon.png' border='0'></a></th>\n";
+echo "<th><a href='?id=" . $START_ID . "'><img src='images/skip-backward-icon.png' border='0'></a></th>\n";
 echo "<th><a href='?id=" . ($id-50) . "'><img src='images/fast-backward-icon.png' border='0'></a></th>\n";
 echo "<th><a href='?id=" . ($id-1) . "'><img src='images/backward-icon.png' border='0'></a></th>\n";
 echo "<th><a href='?id=" . ($id+1) . "'><img src='images/forward-icon.png' border='0'></a></th>\n";
@@ -78,7 +78,7 @@ beam.number as beam_number, beam.coherent as beam_coherent,
 beam.ra, beam.dec, beam.gl, beam.gb,
 
 scheduleblock.sb_id as sb_id,
-scheduleblock.sb_id_code as sb_id_code
+scheduleblock.sb_id_code_mk as sb_id_code_mk
 FROM spscandidate
 
 LEFT JOIN observation_spscandidate
@@ -203,7 +203,7 @@ if ( $result->num_rows == 0 ) {
     echo "<table>\n";
     echo "<tr>\n";
     echo "<td>SB: " . $cand['sb_id'] . "</td>\n";
-    echo "<td>Code: " . $cand['sb_id_code'] . "</td>\n";
+    echo "<td>Code: " . $cand['sb_id_code_mk'] . "</td>\n";
     echo "</tr>\n";
     echo "</table>\n";
 
