@@ -32,8 +32,8 @@ table, th, td {
 }
 
 img.detail {
-    width: 900px;
-    max-width: 900px;
+    width: 909px;
+    max-width: 909px;
     margin-top: 4px;
     margin-bottom: 4px;
     margin-left: 4px;
@@ -50,8 +50,12 @@ img.grid {
 }
 
 div.placeholder {
-    width: 650px;
-    max-width: 650px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 690px;
+    max-width: 690px;
+    height: 100%;
 }
 
 .flex-container {
@@ -60,4 +64,17 @@ div.placeholder {
     flex-wrap: wrap;
     justify-content: center;
     align-content: flex-start;
+}
+
+.flex-container-detail {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-content: flex-start;
+}
+
+div.container-detail {
+    text-align: left;
+    margin: 10px;
 }

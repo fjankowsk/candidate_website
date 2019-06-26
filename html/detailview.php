@@ -68,17 +68,32 @@ spscandidate.width,
 spscandidate.dynamic_spectrum,
 
 observation.id as obs_id,
-observation.field_name as field_name,
-observation.utc_start as obs_utc_start,
-beamconfig.nbeam,
+observation.field_name,
 observation.boresight_ra,
 observation.boresight_dec,
+observation.utc_start as obs_utc_start,
+observation.nant,
+observation.receiver,
+observation.cfreq,
+observation.bw,
+observation.nchan,
+observation.tsamp,
 
-beam.number as beam_number, beam.coherent as beam_coherent,
-beam.ra, beam.dec, beam.gl, beam.gb,
+beamconfig.nbeam,
 
-scheduleblock.sb_id as sb_id,
-scheduleblock.sb_id_code_mk as sb_id_code_mk
+beam.number as beam_number,
+beam.coherent as beam_coherent,
+beam.source as beam_source,
+beam.ra, beam.dec,
+beam.gl, beam.gb,
+
+scheduleblock.sb_id,
+scheduleblock.sb_id_mk,
+scheduleblock.sb_id_code_mk,
+scheduleblock.proposal_id_mk,
+scheduleblock.proj,
+scheduleblock.utc_start as sb_utc_start,
+scheduleblock.description as sb_description
 FROM spscandidate
 
 LEFT JOIN observation_spscandidate
@@ -125,16 +140,22 @@ if ( $result->num_rows == 0 ) {
         echo "</div>\n";
     }
 
+    echo "<div class='flex-container-detail'>\n";
+
     // candidate
+    echo "<div class='container-detail'>\n";
     echo "<h3>Candidate</h3>\n";
     echo "<table>\n";
+
     echo "<tr>\n";
     echo "<td>ID: " . $cand['cand_id'] . "</td>\n";
-    echo "<td>Views: " . $cand['viewed'] . "</td>\n";
     echo "</tr>\n";
 
     echo "<tr>\n";
     echo "<td>S/N: " . sprintf("%.2f", $cand['snr']) . "</td>\n";
+    echo "</tr>\n";
+    
+    echo "<tr>\n";
     echo "<td>Width: " . sprintf("%.2f", $cand['width']) . " ms</td>\n";
     echo "</tr>\n";
 
@@ -144,71 +165,157 @@ if ( $result->num_rows == 0 ) {
     echo "</tr>\n";
     
     echo "<tr>\n";
-    echo "<td colspan=2>UTC: " . $cand['utc'] . "</td>\n";
+    echo "<td>UTC: " . $cand['utc'] . "</td>\n";
     echo "</tr>\n";
 
     echo "<tr>\n";
-    echo "<td colspan=2>MJD: " . sprintf("%.10f", $cand['mjd']) . "</td>\n";
+    echo "<td>MJD: " . sprintf("%.10f", $cand['mjd']) . "</td>\n";
     echo "</tr>\n";
+
+    echo "<tr>\n";
+    echo "<td>Views: " . $cand['viewed'] . "</td>\n";
     echo "</tr>\n";
     echo "</table>\n";
+    echo "</div>\n";
 
     // beam
+    echo "<div class='container-detail'>\n";
     echo "<h3>Beam</h3>\n";
     echo "<table>\n";
+
     echo "<tr>\n";
     echo "<td>Number: " . $cand['beam_number'] . "</td>\n";
-    echo "<td>Coherent: " . $cand['beam_coherent'] . "</td>\n";
+    echo "</tr>\n";
+
+    $coherent = $cand['beam_coherent'] ? "True" : "False";
+    echo "<tr>\n";
+    echo "<td>Coherent: " . $coherent . "</td>\n";
+    echo "</tr>\n";
+
+    echo "<tr>\n";
+    echo "<td>Source: " . $cand['beam_source'] . "</td>\n";
     echo "</tr>\n";
 
     echo "<tr>\n";
     echo "<td>RA: " . $cand['ra'] . "</td>\n";
+    echo "</tr>\n";
+
+    echo "<tr>\n";
     echo "<td>Dec: " . $cand['dec'] . "</td>\n";
     echo "</tr>\n";
 
     if ($cand['gl']) {
         echo "<tr>\n";
         echo "<td>Gl: " . sprintf("%.3f", $cand['gl']) . " deg</td>\n";
+        echo "</tr>\n";
+
+        echo "<tr>\n";
         echo "<td>Gb: " . sprintf("%.3f", $cand['gb']) . " deg</td>\n";
         echo "</tr>\n";
     }
 
     echo "</table>\n";
+    echo "</div>\n";
 
     // observation
+    echo "<div class='container-detail'>\n";
     echo "<h3>Observation</h3>\n";
     echo "<table>\n";
+
     echo "<tr>\n";
     echo "<td>ID: " . $cand['obs_id'] . "</td>\n";
+    echo "</tr>\n";
+
+    echo "<tr>\n";
     echo "<td>UTC start: " . $cand['obs_utc_start'] . "</td>\n";
+    echo "</tr>\n";
+
+    echo "<tr>\n";
+    echo "<td>Antennas: " . $cand['nant'] . "</td>\n";
+    echo "</tr>\n";
+
+    echo "<tr>\n";
+    echo "<td>Receiver: " . $cand['receiver'] . "</td>\n";
+    echo "</tr>\n";
+
+    echo "<tr>\n";
+    echo "<td>Centre frequency: " . $cand['cfreq'] . " MHz</td>\n";
+    echo "</tr>\n";
+
+    echo "<tr>\n";
+    echo "<td>Bandwidth: " . $cand['bw'] . " MHz</td>\n";
+    echo "</tr>\n";
+
+    echo "<tr>\n";
+    echo "<td>Channels: " . $cand['nchan'] . "</td>\n";
+    echo "</tr>\n";
+
+    echo "<tr>\n";
+    echo "<td>Tsamp: " . sprintf("%.2f", ($cand['tsamp'] * 1E6 )) . " us</td>\n";
     echo "</tr>\n";
 
     echo "<tr>\n";
     echo "<td>Total beams: " . $cand['nbeam'] . "</td>\n";
     echo "</tr>\n";
     echo "</table>\n";
+    echo "</div>\n";
 
     // boresight
+    echo "<div class='container-detail'>\n";
     echo "<h3>Boresight</h3>\n";
     echo "<table>\n";
+
     echo "<tr>\n";
     echo "<td>Field: " . $cand['field_name'] . "</td>\n";
     echo "</tr>\n";
 
     echo "<tr>\n";
     echo "<td>RA: " . $cand['boresight_ra'] . "</td>\n";
+    echo "</tr>\n";
+
+    echo "<tr>\n";
     echo "<td>Dec: " . $cand['boresight_dec'] . "</td>\n";
     echo "</tr>\n";
     echo "</table>\n";
+    echo "</div>\n";
 
     // schedule block
+    echo "<div class='container-detail'>\n";
     echo "<h3>Schedule Block</h3>\n";
     echo "<table>\n";
+
     echo "<tr>\n";
-    echo "<td>SB: " . $cand['sb_id'] . "</td>\n";
-    echo "<td>Code: " . $cand['sb_id_code_mk'] . "</td>\n";
+    echo "<td>ID: " . $cand['sb_id'] . "</td>\n";
+    echo "<tr>\n";
+
+    echo "<tr>\n";
+    echo "<td>ID MK: " . $cand['sb_id_mk'] . "</td>\n";
+    echo "<tr>\n";
+
+    echo "<tr>\n";
+    echo "<td>Code MK: " . $cand['sb_id_code_mk'] . "</td>\n";
     echo "</tr>\n";
+
+    echo "<tr>\n";
+    echo "<td>Proposal: " . $cand['proposal_id_mk'] . "</td>\n";
+    echo "</tr>\n";
+
+    echo "<tr>\n";
+    echo "<td>UTC start: " . $cand['sb_utc_start'] . "</td>\n";
+    echo "</tr>\n";
+
+    echo "<tr>\n";
+    echo "<td>Project: " . $cand['proj'] . "</td>\n";
+    echo "</tr>\n";
+
+    echo "<tr>\n";
+    echo "<td>Description: " . $cand['sb_description'] . "</td>\n";
+    echo "</tr>\n";
+
     echo "</table>\n";
+    echo "</div>\n";
+
+    echo "</div>";
 
     // register candidate view
     $stmt = $conn->prepare("UPDATE spscandidate SET viewed = ? WHERE id = ?");
