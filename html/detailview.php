@@ -93,6 +93,8 @@ scheduleblock.sb_id_code_mk,
 scheduleblock.proposal_id_mk,
 scheduleblock.proj,
 scheduleblock.utc_start as sb_utc_start,
+scheduleblock.sub_array,
+scheduleblock.observer,
 scheduleblock.description as sb_description
 FROM spscandidate
 
@@ -310,6 +312,14 @@ if ( $result->num_rows == 0 ) {
 
     echo "<tr>\n";
     echo "<td>Description: " . $cand['sb_description'] . "</td>\n";
+    echo "</tr>\n";
+
+    echo "<tr>\n";
+    echo "<td>Sub-array: " . $cand['sub_array'] . "</td>\n";
+    echo "</tr>\n";
+
+    echo "<tr>\n";
+    echo "<td>Contact MK: " . $cand['observer'] . "</td>\n";
     echo "</tr>\n";
 
     echo "</table>\n";
