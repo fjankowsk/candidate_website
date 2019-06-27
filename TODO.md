@@ -1,7 +1,6 @@
 # TODO #
 
 * add deploy script via Makefile
-* use flexbox for meta data in detail view
 * bring back sort function
 * select only candidates that have not been viewed yet
 * page displaying schedule blocks
