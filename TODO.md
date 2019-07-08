@@ -1,5 +1,6 @@
 # TODO #
 
+* remember offset
 * add deploy script via Makefile
 * bring back sort function
 * select only candidates that have not been viewed yet
