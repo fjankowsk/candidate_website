@@ -95,7 +95,14 @@ scheduleblock.proj,
 scheduleblock.utc_start as sb_utc_start,
 scheduleblock.sub_array,
 scheduleblock.observer,
-scheduleblock.description as sb_description
+scheduleblock.description as sb_description,
+
+pipelineconfig.name as pipeline_name,
+pipelineconfig.version as pipeline_version,
+pipelineconfig.dm_threshold,
+pipelineconfig.snr_threshold,
+pipelineconfig.width_threshold,
+pipelineconfig.zerodm_zapping
 FROM spscandidate
 
 LEFT JOIN observation_spscandidate
@@ -117,6 +124,11 @@ LEFT JOIN beamconfig_observation
 ON observation.id=beamconfig_observation.observation
 LEFT JOIN beamconfig
 ON beamconfig_observation.beamconfig=beamconfig.id
+
+LEFT JOIN pipelineconfig_spscandidate
+ON spscandidate.id=pipelineconfig_spscandidate.spscandidate
+LEFT JOIN pipelineconfig
+ON pipelineconfig_spscandidate.pipelineconfig=pipelineconfig.id
 
 WHERE spscandidate.id = ?";
 
@@ -236,8 +248,17 @@ if ( $result->num_rows == 0 ) {
     echo "<td>Antennas: " . $cand['nant'] . "</td>\n";
     echo "</tr>\n";
 
+    if ($cand['receiver'] == 1) {
+        $receiver = "L-band";
+    } elseif ($cand['receiver'] == 2) {
+        $receiver = "UHF-band";
+    } elseif ($cand['receiver'] == 3) {
+        $receiver = "S-band";
+    } else {
+        $receiver = $cand['receiver'];
+    }
     echo "<tr>\n";
-    echo "<td>Receiver: " . $cand['receiver'] . "</td>\n";
+    echo "<td>Receiver: " . $receiver . "</td>\n";
     echo "</tr>\n";
 
     echo "<tr>\n";
@@ -324,6 +345,39 @@ if ( $result->num_rows == 0 ) {
 
     echo "</table>\n";
     echo "</div>\n";
+
+       // pipeline config
+       echo "<div class='container-detail'>\n";
+       echo "<h3>Pipeline Configuration</h3>\n";
+       echo "<table>\n";
+
+       echo "<tr>\n";
+       echo "<td>Name: " . $cand['pipeline_name'] . "</td>\n";
+       echo "<tr>\n";
+
+       echo "<tr>\n";
+       echo "<td>Version: " . $cand['pipeline_version'] . "</td>\n";
+       echo "<tr>\n";
+   
+       echo "<tr>\n";
+       echo "<td>DM threshold: " . sprintf("%.1f", $cand['dm_threshold']) . " pc cm<sup>-3</sup></td>\n";
+       echo "<tr>\n";
+
+       echo "<tr>\n";
+       echo "<td>S/N threshold: " . sprintf("%.1f", $cand['snr_threshold']) . "</td>\n";
+       echo "<tr>\n";
+
+       echo "<tr>\n";
+       echo "<td>Width threshold: " . sprintf("%.1f", $cand['width_threshold']) . " ms</td>\n";
+       echo "<tr>\n";
+
+       $zerodm_zapping = $cand['zerodm_zapping'] ? "True" : "False";
+       echo "<tr>\n";
+       echo "<td>Zero-DM: " . $zerodm_zapping . "</td>\n";
+       echo "<tr>\n";
+   
+       echo "</table>\n";
+       echo "</div>\n";
 
     echo "</div>";
 
