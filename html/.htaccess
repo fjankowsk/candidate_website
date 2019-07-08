@@ -1,5 +1,0 @@
-Options -Indexes
-AuthType Basic
-AuthName "MeerTRAP candidates"
-AuthUserFile /raid/webhost/www/meerkatcands.com/config/.htpasswd
-Require valid-user
