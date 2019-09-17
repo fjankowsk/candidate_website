@@ -1,0 +1,80 @@
+html, body {
+    font-family: Verdana,sans-serif;
+}
+
+h1 {
+    font-size: 36px;
+}
+h2 {
+    font-size: 30px;
+}
+h3 {
+    font-size: 24px;
+}
+h4 {
+    font-size: 20px;
+}
+h5 {
+    font-size: 18px;
+}
+h6 {
+    font-size: 16px;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    font-family: Arial,sans-serif;
+    font-weight: 400;
+    margin: 10px 0;
+}
+
+table, th, td {
+    border-spacing: 4px;
+}
+
+img.detail {
+    width: 909px;
+    max-width: 909px;
+    margin-top: 4px;
+    margin-bottom: 4px;
+    margin-left: 4px;
+    margin-right: 4px;
+}
+
+img.grid {
+    width: 690px;
+    max-width: 690px;
+    margin-top: 4px;
+    margin-bottom: 4px;
+    margin-left: 4px;
+    margin-right: 4px;
+}
+
+div.placeholder {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 690px;
+    max-width: 690px;
+    height: 100%;
+}
+
+.flex-container {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-content: flex-start;
+}
+
+.flex-container-detail {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-content: flex-start;
+}
+
+div.container-detail {
+    text-align: left;
+    margin: 10px;
+}
