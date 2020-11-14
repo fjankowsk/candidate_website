@@ -1,7 +1,6 @@
 # MeerTRAP Candidate Viewer Website #
 
-This repository contains the code for an interactive candidate viewing website for the MeerTRAP project at
-the MeerKAT telescope written in PHP.
+This repository contains the code for an interactive candidate viewing website for the [MeerTRAP project](https://www.meertrap.org/) at the MeerKAT telescope, written in PHP.
 
 ## Author ##
 
